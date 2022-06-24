@@ -1,0 +1,9 @@
+---
+- name: Test create
+  hosts: localhost
+  vars:
+    action: 'create'
+  vars_files:
+    - provision.yml
+  roles:
+    - ansible-testing
