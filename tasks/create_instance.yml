@@ -72,7 +72,7 @@
 - name: SSH into the container {{ container.name }}
   ansible.builtin.shell: >
     ssh -i {{ work_dir + '/' + ssh_keyfile }} \
-      -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=off -o ConnectTimeout 10 \
+      -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=off -o ConnectTimeout=10 \
       root@{{ container_info.container.NetworkSettings.IPAddress }} \
       "echo 'container is up'"
   register: ssh_cmd
