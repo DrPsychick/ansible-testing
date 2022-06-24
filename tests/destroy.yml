@@ -1,0 +1,9 @@
+---
+- name: Test destroy
+  hosts: localhost
+  vars:
+    action: 'destroy'
+  vars_files:
+    - provision.yml
+  roles:
+    - ansible-testing
