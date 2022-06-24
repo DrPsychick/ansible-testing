@@ -6,4 +6,3 @@
 - name: Destroy environment
   include_tasks: destroy.yml
   when: action == 'destroy'
-

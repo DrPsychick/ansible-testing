@@ -4,7 +4,7 @@
     name: "{{ container.name }}"
     state: absent
 
-#- name: Remove image
+# - name: Remove image
 #  community.docker.docker_image:
 #    name: "{{ container.name }}"
 #    state: absent

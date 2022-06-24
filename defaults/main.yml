@@ -6,7 +6,7 @@ ssh_keyname: "ansible@local"
 instances:
 #  - { name: fedora33, os: fedora, dockerfile: Dockerfile_Fedora, files: ["entrypoint.sh"], args: { VERSION: 33 } }
 #  - { name: fedora36, os: fedora, dockerfile: Dockerfile_Fedora, files: ["entrypoint.sh"], args: { VERSION: 36 } }
-#  - { name: ubuntu2004, os: ubuntu, dockerfile: Dockerfile_Ubuntu, files: ["entrypoint.sh"], args: { VERSION: 20.04 } }
-  - { name: ubuntu2204, os: ubuntu, dockerfile: Dockerfile_Ubuntu, files: ["entrypoint.sh"], args: { VERSION: 22.04 } }
+  - { name: ubuntu2004, os: ubuntu, dockerfile: Dockerfile_Ubuntu, files: ["entrypoint.sh"], args: { VERSION: 20.04 } }
+#  - { name: ubuntu2204, os: ubuntu, dockerfile: Dockerfile_Ubuntu, files: ["entrypoint.sh"], args: { VERSION: 22.04 } }
 #  - { name: centos7, os: centos, dockerfile: Dockerfile_CentOS, files: ["entrypoint.sh"], args: { VERSION: 7 } }
 #  - { name: centos8, os: centos, dockerfile: Dockerfile_CentOS, files: ["entrypoint.sh"], args: { VERSION: 8 } }

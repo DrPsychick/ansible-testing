@@ -1,0 +1,23 @@
+---
+os: linux
+dist: focal
+language: python
+cache: pip
+services:
+  - docker
+
+install:
+  - pip3 install -U ansible jq
+  - printf "[defaults]\nroles_path = ../" > ansible.cfg
+
+script:
+  - ansible-playbook tests/test.yml --syntax-check
+  - yes | ansible-playbook tests/test.yml --connection=local
+  - >
+    result=$(yes | ansible-playbook tests/test.yml --connection=local);
+    echo "$result" | grep -q 'changed=0.*failed=0'
+    && (echo -e "Idempotence test: ${GREEN}pass${NC}"; exit 0)
+    || (echo -e "Idempotence test: ${RED}fail${NC}"; echo -e "$result"; exit 1);
+
+notifications:
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/

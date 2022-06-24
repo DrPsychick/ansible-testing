@@ -1,0 +1,2 @@
+containers:
+  - { name: ubuntu2004, os: ubuntu, dockerfile: Dockerfile_Ubuntu, files: ["entrypoint.sh"], args: { VERSION: 20.04 } }

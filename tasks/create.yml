@@ -1,12 +1,12 @@
 ---
 - name: Ensure work directory exists
-  file:
+  ansible.builtin.file:
     path: "{{ work_dir }}"
     state: directory
     mode: 0755
 
 - name: Generate SSH key
-  shell: >
+  ansible.builtin.shell: >
     if [ ! -r "{{ work_dir + '/' + ssh_keyfile }}" ]; then
       ssh-keygen -q -N "" -f {{ work_dir + '/' + ssh_keyfile }} -C {{ ssh_keyname }} || exit 1
       echo "done"
@@ -15,12 +15,12 @@
   changed_when: ssh_key.stdout == "done"
 
 - name: Slurp public key
-  slurp:
+  ansible.builtin.slurp:
     src: "{{ work_dir + '/' + ssh_keyfile }}.pub"
   register: ssh_key_pub
 
 - name: Build and create instances
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: create_instance.yml
   vars:
     container: "{{ outer_container }}"
@@ -29,8 +29,9 @@
     loop_var: "outer_container"
 
 - name: Generate docker inventory
-  copy:
+  ansible.builtin.copy:
     dest: "{{ work_dir }}/docker_inventory"
+    mode: 0644
     content: |
       all:
         hosts:
@@ -39,9 +40,10 @@
             ansible_connection: docker
       {% endfor %}
 
-#- name: Generate inventory
-#  copy:
+# - name: Generate inventory
+#  ansible.builtin.copy:
 #    dest: "{{ work_dir }}/container_inventory"
+#    mode: 0644
 #    content: |
 #      [container]
 #      {{ container_inventory | community.general.json_query('[].ip') | join("

@@ -1,0 +1,19 @@
+---
+- name: Test create
+  hosts: localhost
+  vars:
+    action: 'create'
+  vars_files:
+    - provision.yml
+  roles:
+    - ansible-testing
+
+- name: Test destroy
+  hosts: localhost
+  remote_user: root
+  vars:
+    action: 'destroy'
+  vars_files:
+    - provision.yml
+  roles:
+    - ansible-testing
