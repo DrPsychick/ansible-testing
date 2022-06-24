@@ -14,7 +14,9 @@ script:
   - ansible-playbook tests/create.yml --syntax-check
   - ls -la /sys/fs/cgroup
   - (cd files/docker; docker build -t test -f Dockerfile_Ubuntu .)
-  - docker run --rm --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro --name ubuntu test /sbin/init
+  - docker run --rm -d --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro --name ubuntu test /sbin/init
+  - sleep 5; docker exec -it ubuntu systemctl
+  - docker rm ubuntu
   - yes | ansible-playbook tests/create.yml --connection=local
   - >
     result=$(yes | ansible-playbook tests/create.yml --connection=local);
