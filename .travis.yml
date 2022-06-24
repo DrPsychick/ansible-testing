@@ -15,7 +15,7 @@ script:
   - ls -la /sys/fs/cgroup
   - (cd files/docker; docker build -t test -f Dockerfile_Ubuntu .)
   - docker run --rm -d --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro --name ubuntu test /sbin/init
-  - sleep 5; docker exec -it ubuntu systemctl
+  - sleep 5; docker exec ubuntu systemctl; docker exec ubuntu journalctl -e -n 100
   - docker rm ubuntu
   - yes | ansible-playbook tests/create.yml --connection=local
   - >
