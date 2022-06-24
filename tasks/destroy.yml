@@ -1,0 +1,23 @@
+---
+- name: Destroy instances
+  include_tasks:
+    file: destroy_instance.yml
+  vars:
+    container: "{{ outer_container }}"
+  with_items: "{{ containers }}"
+  loop_control:
+    loop_var: "outer_container"
+
+- name: Delete SSH key
+  shell: |
+    if [ -r "{{ work_dir + '/' + ssh_keyfile }}" ]; then
+      rm -f {{ work_dir + '/' + ssh_keyfile }} {{ ssh_keyfile }}.pub
+      echo "done"
+    fi
+  register: ssh_key
+  changed_when: ssh_key.stdout == "done"
+
+- name: Delete work directory
+  file:
+    path: "{{ work_dir }}"
+    state: absent

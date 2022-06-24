@@ -1,0 +1,84 @@
+---
+- name: Copy Dockerfile
+  copy: src=docker/{{ item }} dest={{ work_dir }}/{{ item }}
+  with_items: "{{ container.files + [container.dockerfile] }}"
+
+- name: Build container image {{ container.name }}
+  community.docker.docker_image:
+    name: "{{ container.name }}"
+    source: build
+    force_source: yes
+    build:
+      dockerfile: "{{ work_dir }}/{{ container.dockerfile }}"
+      path: "{{ work_dir }}"
+      args: "{{ container.args }}"
+
+# run named container in background with root-SSH
+- name: Run container {{ container.name }}
+  community.docker.docker_container:
+    name: "{{ container.name }}"
+    hostname: "{{ container.name }}"
+    image: "{{ container.name }}"
+    state: started
+    # required for now to have DBus working
+    privileged: yes
+    security_opts:
+     - seccomp=unconfined
+    env:
+      ROOT_KEY: "{{ ssh_key_pub['content'] | b64decode }}"
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    tmpfs:
+# did not work:
+#      {{ ['/run', '/run/lock', '/tmp'] 
+#      + (['/sys/fs/cgroup/systemd'] if ansible_distribution != 'CentOS' else []) 
+#      + (['/var/lib/journal'] if ansible_distribution == 'Ubuntu' else []) 
+#      }}
+      - /run
+      - /run/lock
+      - /tmp
+#      - /sys/fs/cgroup/systemd # NOT for centos7
+#      - /var/lib/journal
+# only got DBus to work with 'privileged' :(
+#    capabilities:
+#      - SYS_ADMIN
+#      - SETPCAP
+#      - NET_ADMIN
+#      - NET_RAW
+#      - NET_BIND_SERVICE
+#      - DAC_OVERRIDE
+#      - SYS_PTRACE
+#      - SYSLOG
+#      - AUDIT_CONTROL
+#      - AUDIT_READ
+#      - CHOWN
+#      - DAC_READ_SEARCH
+#      - FOWNER
+#      - SETUID
+#      - SETGID
+#      - SETFCAP
+#      - MAC_OVERRIDE
+#      - SYS_CHROOT
+
+- community.docker.docker_container_info:
+    name: "{{ container.name }}"
+  register: container_info
+
+#- debug: var=container_info
+
+- name: SSH into the container {{ container.name }}
+  shell: >
+    ssh -i {{ work_dir + '/' + ssh_keyfile }} \
+      -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=off \
+      root@{{ container_info.container.NetworkSettings.IPAddress }} \
+      "echo 'container is up'; cat /etc/"
+  register: ssh_cmd
+  changed_when: false
+  failed_when: ssh_cmd.stdout != "container is up"
+  retries: 3
+  delay: 3
+  until: ssh_cmd.rc == 0
+
+- name: Add container {{ container.name }} to inventory as {{ container_info.container.NetworkSettings.IPAddress }}
+  set_fact:
+    container_inventory: "{{ container_inventory|default([]) + [{ 'name': container.name, 'os': container.os, 'ip': container_info.container.NetworkSettings.IPAddress }] }}"

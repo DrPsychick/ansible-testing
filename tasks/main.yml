@@ -1,0 +1,9 @@
+---
+- name: Create environment
+  include_tasks: create.yml
+  when: action == 'create'
+
+- name: Destroy environment
+  include_tasks: destroy.yml
+  when: action == 'destroy'
+

@@ -1,0 +1,60 @@
+---
+- name: Ensure work directory exists
+  file:
+    path: "{{ work_dir }}"
+    state: directory
+    mode: 0755
+
+- name: Generate SSH key
+  shell: >
+    if [ ! -r "{{ work_dir + '/' + ssh_keyfile }}" ]; then
+      ssh-keygen -q -N "" -f {{ work_dir + '/' + ssh_keyfile }} -C {{ ssh_keyname }} || exit 1
+      echo "done"
+    fi
+  register: ssh_key
+  changed_when: ssh_key.stdout == "done"
+
+- name: Slurp public key
+  slurp:
+    src: "{{ work_dir + '/' + ssh_keyfile }}.pub"
+  register: ssh_key_pub
+
+- name: Build and create instances
+  include_tasks:
+    file: create_instance.yml
+  vars:
+    container: "{{ outer_container }}"
+  with_items: "{{ containers }}"
+  loop_control:
+    loop_var: "outer_container"
+
+- name: Generate docker inventory
+  copy:
+    dest: "{{ work_dir }}/docker_inventory"
+    content: |
+      all:
+        hosts:
+      {% for container in container_inventory %}
+          {{ container.name }}
+            ansible_connection: docker
+      {% endfor %}
+
+#- name: Generate inventory
+#  copy:
+#    dest: "{{ work_dir }}/container_inventory"
+#    content: |
+#      [container]
+#      {{ container_inventory | community.general.json_query('[].ip') | join("
+#      ") }}
+#
+#      [container_fedora]
+#      {{ container_inventory | selectattr('os', 'equalto', 'fedora') | map(attribute='ip') | join("
+#      ") }}
+#
+#      [container_ubuntu]
+#      {{ container_inventory | community.general.json_query("[?os=='ubuntu'].ip") | join("
+#      ") }}
+#
+#      [container_centos]
+#      {{ container_inventory | community.general.json_query("[?os=='centos'].ip") | join("
+#      ") }}

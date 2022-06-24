@@ -1,0 +1,11 @@
+---
+- name: Stop and remove container {{ container.name }}
+  community.docker.docker_container:
+    name: "{{ container.name }}"
+    state: absent
+
+#- name: Remove image
+#  community.docker.docker_image:
+#    name: "{{ container.name }}"
+#    state: absent
+#  ignore_errors: yes

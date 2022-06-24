@@ -1,0 +1,30 @@
+ARG VERSION=33
+FROM fedora:$VERSION
+
+ENV container=docker
+
+STOPSIGNAL SIGRTMIN+3
+
+RUN dnf -y install systemd openssh-server \
+  && dnf clean all 
+#  && (cd /lib/systemd/system/sysinit.target.wants/ ; for i in * ; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i ; done) ; \
+#  rm -f /lib/systemd/system/multi-user.target.wants/* ;\
+#  rm -f /etc/systemd/system/*.wants/* ;\
+#  rm -f /lib/systemd/system/local-fs.target.wants/* ; \
+#  rm -f /lib/systemd/system/sockets.target.wants/*udev* ; \
+#  rm -f /lib/systemd/system/sockets.target.wants/*initctl* ; \
+#  rm -f /lib/systemd/system/basic.target.wants/* ;\
+#  rm -f /lib/systemd/system/anaconda.target.wants/*
+
+#RUN chcon -t var_run_t /run
+
+COPY entrypoint.sh /
+RUN chmod +x /entrypoint.sh
+
+VOLUME /sys/fs/cgroup
+ENTRYPOINT ["/entrypoint.sh"]
+# "Failed to attach X to compat systemd cgroup"
+# did not help: RUN sed -i -e 's#PrivateTmp=yes#PrivateTmp=no#' /lib/systemd/system/systemd-resolved.service
+# did not help? check again! docker daemon.json: { "exec-opts": ["native.cgroupdriver=systemd"] }
+# did not help: /sbin/init systemd.legacy_systemd_cgroup_controller
+CMD ["/sbin/init"]

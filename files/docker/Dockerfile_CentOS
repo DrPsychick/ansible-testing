@@ -1,0 +1,37 @@
+ARG VERSION=7
+FROM centos:$VERSION
+
+ENV container=docker
+
+STOPSIGNAL SIGRTMIN+3
+
+# fix centos 8 mirrors
+ARG VERSION
+RUN if [ $VERSION -eq 8 ]; then \
+      cat /etc/yum.repos.d/CentOS-Linux-AppStream.repo; \
+      sed -i'' -e 's#mirrorlist=http://mirrorlist.centos.org/\(.*\)#\#mirrorslist=http://vault.centos.org/\1#' /etc/yum.repos.d/CentOS-Linux-{BaseOS,AppStream,Extras}.repo; \
+      sed -i'' -e 's#\#baseurl=http://mirror.centos.org/\(.*\)#baseurl=http://vault.centos.org/\1#' /etc/yum.repos.d/CentOS-Linux-{BaseOS,AppStream,Extras}.repo; \
+    fi
+
+RUN yum -y update \
+    && yum -y install systemd systemd-libs openssh-server \
+    && yum clean all
+#RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
+#    rm -f /lib/systemd/system/multi-user.target.wants/*;\
+#    rm -f /etc/systemd/system/*.wants/*;\
+#    rm -f /lib/systemd/system/local-fs.target.wants/*; \
+#    rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
+#    rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
+#    rm -f /lib/systemd/system/basic.target.wants/*;\
+#    rm -f /lib/systemd/system/anaconda.target.wants/*;
+
+# was not needed
+#RUN systemctl set-default multi-user.target && \
+#    systemctl mask dev-hugepages.mount sys-fs-fuse-connections.mount
+
+COPY entrypoint.sh /
+RUN chmod +x /entrypoint.sh
+
+VOLUME /sys/fs/cgroup
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["/usr/sbin/init"]
