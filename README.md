@@ -1,5 +1,5 @@
 # Ansible testing
-[![Build Status](https://travis-ci.com/DrPsychick/ansible-testing.svg?branch=master)](https://travis-ci.com/DrPsychick/ansible-testing)
+[![Build Status](https://travis-ci.com/DrPsychick/ansible-testing.svg?branch=master)](https://app.travis-ci.com/github/DrPsychick/ansible-testing)
 [![license](https://img.shields.io/github/license/drpsychick/ansible-testing.svg)](https://github.com/drpsychick/ansible-testing/blob/master/LICENSE)
 [![Paypal](https://img.shields.io/badge/donate-paypal-00457c.svg?logo=paypal)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FTXDN7LCDWUEA&source=url)
 [![GitHub Sponsor](https://img.shields.io/badge/github-sponsor-blue?logo=github)](https://github.com/sponsors/DrPsychick)

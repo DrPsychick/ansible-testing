@@ -87,4 +87,4 @@
     container_inventory: >
       {{ container_inventory | default([]) + [
         { 'name': container.name, 'os': container.os, 'ip': container_info.container.NetworkSettings.IPAddress }
-      ] }}"
+      ] }}

@@ -12,11 +12,6 @@ install:
 
 script:
   - ansible-playbook tests/create.yml --syntax-check
-  - ls -la /sys/fs/cgroup
-  - (cd files/docker; docker build -t test -f Dockerfile_Ubuntu .)
-  - docker run --rm -d --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro --name ubuntu test /sbin/init
-  - sleep 5; docker exec ubuntu systemctl; docker exec ubuntu journalctl -e -n 100
-  - docker stop ubuntu
   - yes | ansible-playbook tests/create.yml --connection=local
   - >
     result=$(yes | ansible-playbook tests/create.yml --connection=local);
