@@ -7,7 +7,7 @@ services:
   - docker
 
 install:
-  - pip3 install -U ansible jq
+  - pip3 install -U ansible jq docker
   - printf "[defaults]\nroles_path = ../" > ansible.cfg
 
 script:
