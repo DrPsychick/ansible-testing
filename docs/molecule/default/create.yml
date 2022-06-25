@@ -12,7 +12,7 @@
       import_role:
         name: drpsychick.ansible_testing
       vars:
-        action: 'create'
+        provision_action: 'create'
 
     - block:
         - name: Populate instance config dict

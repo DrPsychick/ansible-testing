@@ -1,11 +1,11 @@
 ---
-- name: Converge
+- name: Cleanup
   hosts: all
   vars_files:
     - vars.yml
   tasks:
-    - name: "Include ansible_testing create"
+    - name: "Include ansible_testing destroy"
       ansible.builtin.include_role:
         name: drpsychick.ansible_testing
       vars:
-        provision_action: 'create'
+        provision_action: 'destroy'

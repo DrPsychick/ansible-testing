@@ -11,7 +11,7 @@
       import_role:
         name: drpsychick.ansible_testing
       vars:
-        action: 'destroy'
+        provision_action: 'destroy'
 
     - name: Populate instance config
       ansible.builtin.set_fact:

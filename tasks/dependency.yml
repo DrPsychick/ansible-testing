@@ -1,12 +1,12 @@
 ---
 - name: Required packages
-  package:
+  ansible.builtin.package:
     name: "{{ ['python3-setuptools', 'python3-pip'] + (['openssh-client'] if ansible_distribution == 'Ubuntu' else ['openssh-clients']) }}"
-  become: yes
+  become: true
   become_user: root
 
 - name: Required pip packages
-  pip:
+  ansible.builtin.pip:
     name: ["docker"]
-  become: yes
+  become: true
   become_user: root

@@ -2,7 +2,7 @@
 - name: Test destroy
   hosts: localhost
   vars:
-    action: 'destroy'
+    provision_action: 'destroy'
   vars_files:
     - provision.yml
   roles:

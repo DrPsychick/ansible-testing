@@ -1,12 +1,12 @@
 ---
 - name: Include dependency
   include_tasks: dependency.yml
-  when: action == 'create'
+  when: provision_action == 'create'
 
 - name: Create environment
   include_tasks: create.yml
-  when: action == 'create'
+  when: provision_action == 'create'
 
 - name: Destroy environment
   include_tasks: destroy.yml
-  when: action == 'destroy'
+  when: provision_action == 'destroy'

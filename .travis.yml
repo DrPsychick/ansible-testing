@@ -8,6 +8,12 @@ cache: pip
 services:
   - docker
 
+env:
+  global:
+    - GREEN='\033[0;32m'
+    - RED='\033[0;31m'
+    - NC='\033[0m' # No Color
+
 install:
   - pip3 install -U ansible jq docker molecule molecule-docker
   - printf "[defaults]\nroles_path = ../" > ansible.cfg

@@ -1,0 +1,19 @@
+---
+- name: Install docker driver
+  hosts: all
+  tasks:
+    - name: Install fuse-overlayfs
+      package:
+        name: fuse-overlayfs
+
+- name: Install prerequisite docker
+  hosts: all
+  vars:
+    docker_install_compose: false
+    docker_daemon_options:
+      storage-driver: "fuse-overlayfs"
+      log-driver: "local"
+      log-opts:
+        max-size: "100m"
+  roles:
+    - geerlingguy.docker
