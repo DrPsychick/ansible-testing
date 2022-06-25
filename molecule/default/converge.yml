@@ -4,7 +4,8 @@
   vars:
     docker_install_compose: false
     docker_daemon_options:
-      storage-driver: "devicemapper"
+      storage-driver: "overlay2"
+      log-driver: "local"
       log-opts:
         max-size: "100m"
   roles:
