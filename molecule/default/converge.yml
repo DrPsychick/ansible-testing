@@ -1,6 +1,8 @@
 ---
 - name: Converge
   hosts: all
+  vars_files:
+    - vars.yml
   tasks:
     - name: "Include ansible_testing create"
       ansible.builtin.include_role:
