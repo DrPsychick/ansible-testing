@@ -1,0 +1,23 @@
+galaxy_info:
+  author: DrPsychick
+  description: role to spin up systemd docker containers to test your ansible roles with
+  license: MIT
+  min_ansible_version: 2.2
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - all
+    - name: Fedora
+      verions:
+        - all
+    - name: CentOS
+      versions:
+        - all
+
+  galaxy_tags:
+    - ansible
+    - docker
+    - testing
+
+dependencies: []

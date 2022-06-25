@@ -1,0 +1,4 @@
+# ansible-galaxy install -r requirements.yml
+collections:
+- community.docker
+- community.general
