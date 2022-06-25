@@ -1,7 +1,9 @@
 ---
 - name: Required packages
   package:
-    name: ["python3-setuptools", "python3-pip", "ssh"]
+    name: "{{ ['python3-setuptools', 'python3-pip'] + ['openssh-client'] if ansible_distribution == 'Ubuntu' else ['openssh-clients'] }}"
+  become: yes
+  become_user: root
 
 - name: Required pip packages
   pip:
