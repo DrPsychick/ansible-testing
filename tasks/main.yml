@@ -1,4 +1,7 @@
 ---
+- name: Include dependency
+  include_tasks: dependency.yml
+
 - name: Create environment
   include_tasks: create.yml
   when: action == 'create'

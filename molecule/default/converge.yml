@@ -1,4 +1,15 @@
 ---
+- name: Install prerequisite docker
+  hosts: all
+  vars:
+    docker_install_compose: false
+    docker_daemon_options:
+      storage-driver: "devicemapper"
+      log-opts:
+        max-size: "100m"
+  roles:
+    - geerlingguy.docker
+
 - name: Converge
   hosts: all
   vars_files:

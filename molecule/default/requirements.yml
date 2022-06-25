@@ -1,2 +1,3 @@
 roles:
   - drpsychick.ansible_testing
+  - geerlingguy.docker
