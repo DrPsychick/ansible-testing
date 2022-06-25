@@ -1,7 +1,7 @@
 ---
 - name: Required packages
   package:
-    name: ["python3-setuptools", "python3-pip"]
+    name: ["python3-setuptools", "python3-pip", "ssh"]
 
 - name: Required pip packages
   pip:
