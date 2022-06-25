@@ -19,6 +19,7 @@ script:
     && (echo -e "Idempotence test: ${GREEN}pass${NC}"; exit 0)
     || (echo -e "Idempotence test: ${RED}fail${NC}"; echo -e "$result"; exit 1);
   - yes | ansible-playbook tests/destroy.yml --connection=local
+  - rm ansible.cfg
   - molecule test
 
 notifications:

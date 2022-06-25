@@ -1,5 +1,6 @@
 ---
 - name: Install docker driver
+  hosts: all
   tasks:
     - name: Install fuse-overlayfs
       package:
