@@ -7,7 +7,7 @@ services:
   - docker
 
 install:
-  - pip3 install -U ansible jq docker
+  - pip3 install -U ansible jq docker molecule molecule-docker
   - printf "[defaults]\nroles_path = ../" > ansible.cfg
 
 script:
@@ -19,6 +19,7 @@ script:
     && (echo -e "Idempotence test: ${GREEN}pass${NC}"; exit 0)
     || (echo -e "Idempotence test: ${RED}fail${NC}"; echo -e "$result"; exit 1);
   - yes | ansible-playbook tests/destroy.yml --connection=local
+  - molecule test
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/

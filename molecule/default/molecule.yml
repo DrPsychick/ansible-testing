@@ -1,0 +1,15 @@
+---
+dependency:
+  name: galaxy
+  options:
+    requirements-file: requirements.yml
+driver:
+  name: docker
+platforms:
+  - name: fedora36
+  - name: ubuntu2204
+  - name: centos8
+provisioner:
+  name: ansible
+verifier:
+  name: ansible
