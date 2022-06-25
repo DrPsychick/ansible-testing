@@ -3,9 +3,11 @@
   hosts: all
   vars_files:
     - vars.yml
+  ignore_unreachable: true
   tasks:
     - name: "Include ansible_testing destroy"
       ansible.builtin.include_role:
         name: drpsychick.ansible_testing
       vars:
         provision_action: 'destroy'
+      ignore_errors: true
