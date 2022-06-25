@@ -4,16 +4,21 @@
 [![Paypal](https://img.shields.io/badge/donate-paypal-00457c.svg?logo=paypal)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FTXDN7LCDWUEA&source=url)
 [![GitHub Sponsor](https://img.shields.io/badge/github-sponsor-blue?logo=github)](https://github.com/sponsors/DrPsychick)
 
-Creates instances which you can use to test your Ansible roles with. Intended to be run locally.
+Creates fully functional SystemD instances which you can use to test your Ansible roles with.
+Intended to be run locally on a Linux box with Docker installed.
 
 ## Configuration
 Check [defaults/main.yml](defaults/main.yml) see how to define instances and adjust it to your needs.
+* Define your own `work_dir`. The contents are temporary and will be removed with `destroy`!
+* Define the instances you want to spin up.
 
 ## Contribution
 If you have more systems you want to test, feel free to provide a PR with an additional Dockerfile.
 
 # Usage
-Requirements: Linux (as it spawns containers in `privileged` mode and binds `/sys/fs/cgroup`)
+Requirements: 
+* Linux (as it spawns containers in `privileged` mode and binds `/sys/fs/cgroup`)
+* Docker (maybe supporting libvirt/kvm in the future)
 
 ## Standalone
 Write your own playbook or use the playbooks in `tests`
@@ -35,10 +40,10 @@ Create your role, then copy the `docs/molecule` directory into your roles direct
 Requirements
 * `pip3 install -U molecule molecule-docker`
 
-Adjust the `molecule/default/provision.yml` to define which instances to provision.
+Adjust the `molecule/default/vars.yml` to define which instances to provision.
 Then adjust the `platforms` in `molecule.yml` accordingly.
 
-`provision.yml`
+`vars.yml`
 ```yaml
 work_dir: "/tmp/ansible-testhost"
 containers:

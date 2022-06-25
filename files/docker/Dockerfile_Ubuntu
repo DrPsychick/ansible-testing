@@ -6,7 +6,7 @@ ENV container=docker
 STOPSIGNAL SIGRTMIN+3
 
 RUN apt update \
-    && apt install -y systemd dbus openssh-server rsyslog ca-certificates \
+    && apt install -y systemd dbus openssh-server rsyslog ca-certificates sudo \
     && apt clean
 
 #RUN sed -i 's/^\(module(load="imklog")\)/#\1/' /etc/rsyslog.conf

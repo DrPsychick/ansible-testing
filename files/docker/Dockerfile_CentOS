@@ -14,7 +14,7 @@ RUN if [ $VERSION -eq 8 ]; then \
     fi
 
 RUN yum -y update \
-    && yum -y install systemd systemd-libs openssh-server \
+    && yum -y install systemd systemd-libs openssh-server sudo \
     && yum clean all
 #RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
 #    rm -f /lib/systemd/system/multi-user.target.wants/*;\
