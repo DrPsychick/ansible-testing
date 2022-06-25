@@ -2,6 +2,8 @@
 os: linux
 dist: focal
 language: python
+python:
+  - "3.9"
 cache: pip
 services:
   - docker
@@ -11,6 +13,7 @@ install:
   - printf "[defaults]\nroles_path = ../" > ansible.cfg
 
 script:
+  # old style manual test
   - ansible-playbook tests/create.yml --syntax-check
   - yes | ansible-playbook tests/create.yml --connection=local
   - >
@@ -19,6 +22,7 @@ script:
     && (echo -e "Idempotence test: ${GREEN}pass${NC}"; exit 0)
     || (echo -e "Idempotence test: ${RED}fail${NC}"; echo -e "$result"; exit 1);
   - yes | ansible-playbook tests/destroy.yml --connection=local
+  # automated test with molecule
   - rm ansible.cfg
   - molecule test
 
