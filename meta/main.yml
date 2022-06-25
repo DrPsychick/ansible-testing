@@ -1,5 +1,6 @@
 galaxy_info:
   author: DrPsychick
+  role_name: ansible_testing
   description: role to spin up systemd docker containers to test your ansible roles with
   license: MIT
   min_ansible_version: 2.2
