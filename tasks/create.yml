@@ -27,7 +27,6 @@
   with_items: "{{ containers }}"
   loop_control:
     loop_var: "outer_container"
-  when: containers|length > 0
 
 - name: Generate docker inventory
   ansible.builtin.copy:
@@ -40,25 +39,3 @@
           {{ container.name }}:
             ansible_connection: docker
       {% endfor %}
-  when: containers|length > 0
-
-# - name: Generate inventory
-#  ansible.builtin.copy:
-#    dest: "{{ work_dir }}/container_inventory"
-#    mode: 0644
-#    content: |
-#      [container]
-#      {{ container_inventory | community.general.json_query('[].ip') | join("
-#      ") }}
-#
-#      [container_fedora]
-#      {{ container_inventory | selectattr('os', 'equalto', 'fedora') | map(attribute='ip') | join("
-#      ") }}
-#
-#      [container_ubuntu]
-#      {{ container_inventory | community.general.json_query("[?os=='ubuntu'].ip") | join("
-#      ") }}
-#
-#      [container_centos]
-#      {{ container_inventory | community.general.json_query("[?os=='centos'].ip") | join("
-#      ") }}
