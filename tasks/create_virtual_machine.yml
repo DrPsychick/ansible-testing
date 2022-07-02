@@ -110,5 +110,5 @@
   ansible.builtin.set_fact:
     virtual_machine_inventory: >
       {{ virtual_machine_inventory | default([]) + [
-        { 'name': instance.name, 'os': instance.os, 'ip': vm_ip.stdout }
+        { 'name': instance.name, 'os': instance.os, 'ip': vm_ip.stdout, 'password': instance.password }
       ] }}
