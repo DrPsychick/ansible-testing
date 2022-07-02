@@ -7,14 +7,14 @@
     mode: 0755
 
 - name: Copy PowerShell upgrade script
-  win_copy:
+  copy:
     remote_src: true
     src: "{{ work_dir }}/scripts/upgrade-powershell.ps1"
     dest: "{{ work_dir }}/scripts-{{ instance.name }}/upgrade-powershell.ps1"
   register: upgrade_powershell
 
 - name: Copy WinRM hotfix script
-  win_copy:
+  copy:
     remote_src: true
     src: "{{ work_dir }}/scripts/winrm-hotfix.ps1"
     dest: "{{ work_dir }}/scripts-{{ instance.name }}/winrm-hotfix.ps1"

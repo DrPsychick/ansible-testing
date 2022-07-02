@@ -64,7 +64,9 @@ xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
                     </InstallTo>
                     <InstallFrom>
                         <!-- DISM /Get-WimInfo /WimFile:D:\sources\install.wim -->
-                        <!-- <Path>{{ instance.image_wimpath }}</Path> -->
+{% if instance.image_wimpath is defined %}
+                        <Path>{{ instance.image_wimpath }}</Path>
+{% endif %}
                         <MetaData wcm:action="add">
                             <Key>/IMAGE/{{ 'INDEX' if instance.image_index is defined else 'NAME' }}</Key>
 {% if instance.image_index is defined %}
