@@ -19,9 +19,9 @@
     src: "{{ work_dir + '/' + ssh_keyfile }}.pub"
   register: ssh_key_pub
 
-- name: Build and create instances
+- name: Build and create containers
   ansible.builtin.include_tasks:
-    file: create_instance.yml
+    file: create_container.yml
   vars:
     container: "{{ outer_container }}"
   with_items: "{{ containers }}"
@@ -36,27 +36,6 @@
       all:
         hosts:
       {% for container in container_inventory %}
-          {{ container.name }}
+          {{ container.name }}:
             ansible_connection: docker
       {% endfor %}
-
-# - name: Generate inventory
-#  ansible.builtin.copy:
-#    dest: "{{ work_dir }}/container_inventory"
-#    mode: 0644
-#    content: |
-#      [container]
-#      {{ container_inventory | community.general.json_query('[].ip') | join("
-#      ") }}
-#
-#      [container_fedora]
-#      {{ container_inventory | selectattr('os', 'equalto', 'fedora') | map(attribute='ip') | join("
-#      ") }}
-#
-#      [container_ubuntu]
-#      {{ container_inventory | community.general.json_query("[?os=='ubuntu'].ip") | join("
-#      ") }}
-#
-#      [container_centos]
-#      {{ container_inventory | community.general.json_query("[?os=='centos'].ip") | join("
-#      ") }}

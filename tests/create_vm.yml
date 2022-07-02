@@ -1,0 +1,9 @@
+---
+- name: Test create virtual machine
+  hosts: localhost
+  vars:
+    provision_action: 'create'
+  vars_files:
+    - virtualmachine.yml
+  roles:
+    - ansible-testing

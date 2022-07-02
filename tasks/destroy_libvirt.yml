@@ -1,0 +1,8 @@
+---
+- name: Destroy virtual machines
+  include_tasks: destroy_virtual_machine.yml
+  vars:
+    instance: "{{ outer_instance }}"
+  with_items: "{{ virtual_machines }}"
+  loop_control:
+    loop_var: "outer_instance"

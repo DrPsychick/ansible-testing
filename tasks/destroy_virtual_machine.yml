@@ -1,0 +1,26 @@
+---
+- name: Delete virtual machine
+  community.libvirt.virt:
+    command: undefine
+    name: "{{ instance.name }}"
+    state: destroyed
+  become: true
+  become_user: root
+  ignore_errors: true
+
+- name: Check for image
+  stat:
+    path: "{{ libvirt_image_dir }}/{{ instance.name }}.qcow2"
+  register: image_file
+
+- name: Delete image
+  shell: virsh vol-delete {{ instance.name }}.qcow2 --pool images
+  become: true
+  become_user: root
+  when: image_file.stat.exists
+  ignore_errors: true
+
+- name: Delete directory
+  file:
+    path: "{{ work_dir }}/scripts-{{ instance.name }}"
+    state: absent

@@ -1,0 +1,21 @@
+work_dir: "/tmp/ansible-testhost"
+containers: []
+virtual_machines:
+  - name: "windows2016"
+    password: "Ecoo6pev"
+    os: "windows"
+    isos:
+      - name: "WindowsServer2016.iso"
+        dev: sda
+      - name: "virtio-win.iso"
+        dev: sdb
+      - name: "scripts-windows2016.iso"
+        dev: sdc
+    disk_size: 20G
+    image_index: 2
+    drivers:
+      - 'E:\amd64\2k16'
+      - 'E:\NetKVM\2k16\amd64'
+      - 'E:\Balloon\2k16\amd64'
+    mac: "02:00:00:00:13:37"
+    vnc_port: 56682

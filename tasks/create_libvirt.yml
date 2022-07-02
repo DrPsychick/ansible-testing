@@ -1,0 +1,43 @@
+---
+- name: Ensure target directory exists
+  file:
+    path: "{{ work_dir }}/scripts"
+    state: directory
+    mode: 0755
+
+- name: Download PowerShell upgrade script
+  get_url:
+    url: "{{ libvirt_upgrade_powershell_url }}"
+    dest: "{{ work_dir }}/scripts/upgrade-powershell.ps1"
+  register: upgrade_powershell
+
+- name: Download WinRM hotfix script
+  get_url:
+    url: "{{ libvirt_winrm_hotfix_url }}"
+    dest: "{{ work_dir }}/scripts/winrm-hotfix.ps1"
+  register: winrm_hotfix
+
+- name: Create virtual machines
+  include_tasks: create_virtual_machine.yml
+  vars:
+    instance: "{{ outer_instance }}"
+  with_items: "{{ virtual_machines }}"
+  loop_control:
+    loop_var: "outer_instance"
+
+- name: Generate virsh inventory
+  ansible.builtin.copy:
+    dest: "{{ work_dir }}/virsh_inventory"
+    mode: 0644
+    content: |
+      all:
+        hosts:
+      {% for instance in virtual_machine_inventory %}
+          {{ instance.name }}:
+            ansible_host: {{ instance.ip }}
+            ansible_connection: 'winrm'
+            ansible_wirm_transport: 'basic'
+            ansible_user: 'Administrator'
+            ansible_password: '{{ instance.password }}'
+            ansible_port: 5985
+      {% endfor %}

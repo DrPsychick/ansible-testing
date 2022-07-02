@@ -1,0 +1,127 @@
+<unattend xmlns="urn:schemas-microsoft-com:unattend"
+xmlns:ms="urn:schemas-microsoft-com:asm.v3"
+xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
+    <settings pass="windowsPE">
+        <component name="Microsoft-Windows-PnpCustomizationsWinPE"
+        processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35"
+        language="neutral" versionScope="nonSxS">
+            <DriverPaths>
+{% for d in instance.drivers %}
+                <PathAndCredentials wcm:keyValue="{{ loop.index }}" wcm:action="add">
+                    <Path>{{ d }}</Path>
+                </PathAndCredentials>
+{% endfor %}
+            </DriverPaths>
+        </component>
+        <component name="Microsoft-Windows-International-Core-WinPE"
+        processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35"
+        language="neutral" versionScope="nonSxS">
+            <SetupUILanguage>
+                <UILanguage>en-US</UILanguage>
+            </SetupUILanguage>
+            <InputLocale>en-US</InputLocale>
+            <SystemLocale>en-US</SystemLocale>
+            <UILanguage>en-US</UILanguage>
+            <UILanguageFallback>en-US</UILanguageFallback>
+            <UserLocale>en-US</UserLocale>
+        </component>
+        <component name="Microsoft-Windows-Setup"
+        publicKeyToken="31bf3856ad364e35" language="neutral"
+        versionScope="nonSxS" processorArchitecture="amd64">
+            <UserData>
+                <AcceptEula>true</AcceptEula>
+            </UserData>
+            <DiskConfiguration>
+                <WillShowUI>OnError</WillShowUI>
+                <Disk wcm:action="add">
+                    <DiskID>0</DiskID>
+                    <WillWipeDisk>true</WillWipeDisk>
+                    <CreatePartitions>
+                        <CreatePartition wcm:action="add">
+                            <Order>1</Order>
+                            <Type>Primary</Type>
+                            <Extend>true</Extend>
+                        </CreatePartition>
+                    </CreatePartitions>
+                    <ModifyPartitions>
+                        <ModifyPartition wcm:action="add">
+                            <Format>NTFS</Format>
+                            <Label>Windows</Label>
+                            <Letter>C</Letter>
+                            <Order>1</Order>
+                            <PartitionID>1</PartitionID>
+                            <Active>true</Active>
+                        </ModifyPartition>
+                    </ModifyPartitions>
+                </Disk>
+            </DiskConfiguration>
+            <ImageInstall>
+                <OSImage>
+                    <WillShowUI>OnError</WillShowUI>
+                    <InstallTo>
+                        <DiskID>0</DiskID>
+                        <PartitionID>1</PartitionID>
+                    </InstallTo>
+                    <InstallFrom>
+                        <!-- DISM /Get-WimInfo /WimFile:D:\sources\install.wim -->
+{% if instance.image_wimpath is defined %}
+                        <Path>{{ instance.image_wimpath }}</Path>
+{% endif %}
+                        <MetaData wcm:action="add">
+                            <Key>/IMAGE/{{ 'INDEX' if instance.image_index is defined else 'NAME' }}</Key>
+{% if instance.image_index is defined %}
+                            <Value>{{ instance.image_index }}</Value>
+{% else %}
+                            <Value>{{ instance.image_name }}</Value>
+{% endif %}
+                        </MetaData>
+                    </InstallFrom>
+                </OSImage>
+            </ImageInstall>
+        </component>
+    </settings>
+    <settings pass="specialize">
+        <component name="Microsoft-Windows-Shell-Setup"
+        processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35"
+        language="neutral" versionScope="nonSxS">
+            <ComputerName>{{ instance.hostname|default(instance.name) }}</ComputerName>
+        </component>
+    </settings>
+    <settings pass="oobeSystem">
+        <component name="Microsoft-Windows-Deployment"
+        processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35"
+        language="neutral" versionScope="nonSxS">
+            <Reseal>
+                <Mode>OOBE</Mode>
+            </Reseal>
+        </component>
+        <component name="Microsoft-Windows-Shell-Setup"
+        processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35"
+        language="neutral" versionScope="nonSxS">
+            <TimeZone>UTC</TimeZone>
+            <UserAccounts>
+                <AdministratorPassword>
+                    <Value>{{ instance.password }}</Value>
+                    <PlainText>true</PlainText>
+                </AdministratorPassword>
+            </UserAccounts>
+            <AutoLogon>
+                <Password>
+                    <Value>{{ instance.password }}</Value>
+                    <PlainText>true</PlainText>
+                </Password>
+                <Enabled>true</Enabled>
+                <LogonCount>3</LogonCount>
+                <Username>Administrator</Username>
+            </AutoLogon>
+            <FirstLogonCommands>
+                <SynchronousCommand wcm:action="add">
+                    <Order>1</Order>
+                    <CommandLine>F:\autorun.bat</CommandLine>
+                    <Description>Setup PowerShell and WinRM</Description>
+                    <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+            </FirstLogonCommands>
+        </component>
+    </settings>
+</unattend>

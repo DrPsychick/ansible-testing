@@ -1,0 +1,13 @@
+---
+dependency:
+  name: galaxy
+  options:
+    requirements-file: requirements.yml
+driver:
+  name: delegated
+platforms:
+  - name: windows2016
+provisioner:
+  name: ansible
+verifier:
+  name: ansible

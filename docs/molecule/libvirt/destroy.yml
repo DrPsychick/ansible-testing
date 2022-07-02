@@ -1,0 +1,28 @@
+---
+- name: Destroy
+  hosts: localhost
+  connection: local
+  no_log: "{{ molecule_no_log }}"
+  vars_files:
+    - vars.yml
+  tasks:
+
+    - name: Deprovision
+      import_role:
+        name: drpsychick.ansible_testing
+      vars:
+        provision_action: 'destroy'
+
+    - name: Populate instance config
+      ansible.builtin.set_fact:
+        instance_conf: {}
+
+    - name: Dump instance config
+      ansible.builtin.copy:
+        content: |
+          # Molecule managed
+
+          {{ instance_conf | to_json | from_json | to_yaml }}
+        dest: "{{ molecule_instance_config }}"
+        mode: 0600
+      when: server.changed | default(false) | bool
