@@ -52,6 +52,8 @@
   template:
     src: instance.xml
     dest: "{{ work_dir }}/instance-{{ instance.name }}.xml"
+  register: instance_template
+  changed_when: instance_template is changed and instance.uuid is defined
 
 - name: Create disk
   shell: >
@@ -83,8 +85,8 @@
   become: true
   become_user: root
 
-- name: Wait 3 minutes for windows setup to complete
-  shell: sleep 180
+- name: Wait 5 minutes for windows setup to complete
+  shell: sleep {{ 5 * 60 }}
   when: create_vm is changed
 
 - name: Get virtual machine info
@@ -103,6 +105,7 @@
   register: vm_ip
   become: true
   become_user: root
+  changed_when: false
   failed_when: not vm_ip.stdout | regex_search('[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+')
 
 - name: Add instance {{ instance.name }} to inventory
