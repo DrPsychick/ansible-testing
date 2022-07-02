@@ -102,6 +102,12 @@ molecule test
   * Download the VirtIO ISO
   * Put both ISOs into the `libvirt_iso_dir`
 
+```shell
+# download the ISOs
+sudo curl -Lo /var/lib/libvirt/isos/WindowsServer2016.iso http://care.dlservice.microsoft.com/dl/download/1/6/F/16FA20E6-4662-482A-920B-1A45CF5AAE3C/14393.0.160715-1616.RS1_RELEASE_SERVER_EVAL_X64FRE_EN-US.ISO
+sudo curl -Lo /var/lib/libvirt/isos/virtio-win.iso https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso
+```
+
 ### Standalone
 ```shell
 ansible-galaxy install -r requirements.yml
