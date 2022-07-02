@@ -34,4 +34,10 @@
         hosts:
       {% for instance in virtual_machine_inventory %}
           {{ instance.name }}:
+            ansible_host: {{ instance.ip }}
+            ansible_connection: 'winrm'
+            ansible_wirm_transport: 'basic'
+            ansible_user: 'Administrator'
+            ansible_password: '{{ instance.password }}'
+            ansible_port: 5985
       {% endfor %}

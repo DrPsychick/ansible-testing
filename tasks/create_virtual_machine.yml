@@ -99,13 +99,11 @@
   until: not virt_info_cmd.failed and virt_info_cmd[instance.name].state == "running"
 
 - name: Get virtual machine IP
-  shell: virsh domifaddr {{ instance.name }} | grep '{{ instance.mac }}' | awk '{print $4}' | awk -F/ '{print $1}'
+  shell: virsh domifaddr {{ instance.name }} | grep 'ipv4' | awk '{print $4}' | awk -F/ '{print $1}'
   register: vm_ip
-  failed_when: vm_ip.stdout | regex_search('[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+')
-  ignore_errors: true
-
-- debug: var=virt_info_cmd
-- debug: var=vm_ip
+  become: true
+  become_user: root
+  failed_when: not vm_ip.stdout | regex_search('[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+')
 
 - name: Add instance {{ instance.name }} to inventory
   # as {{ .IPAddress }}
