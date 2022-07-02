@@ -4,13 +4,13 @@
 [![Paypal](https://img.shields.io/badge/donate-paypal-00457c.svg?logo=paypal)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FTXDN7LCDWUEA&source=url)
 [![GitHub Sponsor](https://img.shields.io/badge/github-sponsor-blue?logo=github)](https://github.com/sponsors/DrPsychick)
 
-Creates fully functional SystemD instances which you can use to test your Ansible roles with.
+Creates fully functional SystemD containers which you can use to test your Ansible roles with.
 Intended to be run locally on a Linux box with Docker installed.
 
 ## Configuration
-Check [defaults/main.yml](defaults/main.yml) see how to define instances and adjust it to your needs.
+Check [defaults/main.yml](defaults/main.yml) see how to define containers and adjust it to your needs.
 * Define your own `work_dir`. The contents are temporary and will be removed with `destroy`!
-* Define the instances you want to spin up.
+* Define the containers you want to spin up.
 
 ## Contribution
 If you have more systems you want to test, feel free to provide a PR with an additional Dockerfile.
@@ -18,19 +18,22 @@ If you have more systems you want to test, feel free to provide a PR with an add
 # Usage
 Requirements: 
 * Linux (as it spawns containers in `privileged` mode and binds `/sys/fs/cgroup`)
-* Docker (maybe supporting libvirt/kvm in the future)
+* Docker
+* libvirt (for Windows virtual machines)
 
 ## Standalone
 Write your own playbook or use the playbooks in `tests`
 ```shell
+ansible-galaxy install -r requirements.yml
+
 # edit tests/provision.yml to your needs
 echo "[defaults]
 roles_path = .." > ansible.cfg
 
-# create instances
+# create containers
 ansible-playbook tests/create.yml
 
-# destroy instances
+# destroy containers
 ansible-playbook tests/destroy.yml
 ```
 
@@ -40,7 +43,7 @@ Create your role, then copy the `docs/molecule` directory into your roles direct
 Requirements
 * `pip3 install -U molecule molecule-docker`
 
-Adjust the `molecule/default/vars.yml` to define which instances to provision.
+Adjust the `molecule/default/vars.yml` to define which containers to provision.
 Then adjust the `platforms` in `molecule.yml` accordingly.
 
 `vars.yml`
@@ -87,4 +90,29 @@ molecule destroy
 
 # or everything in one go
 molecule test
+```
+
+## Test with Windows VMs
+### Prerequisites
+* install `libvirt`, `libvirt-clients`, `virtinst`
+* ansible-galaxy `community.libvirt`
+* for Ansible to connect with WinRM: `python3-winrm`
+* see [defaults/main.yml](defaults/main.yml)
+  * Download the Windows Image of your choice (Test is setup for Windows 2016)
+  * Download the VirtIO ISO
+  * Put both ISOs into the `libvirt_iso_dir`
+
+### Standalone
+```shell
+ansible-galaxy install -r requirements.yml
+
+# edit tests/provision.yml to your needs
+echo "[defaults]
+roles_path = .." > ansible.cfg
+
+# create virtual machine
+ansible-playbook tests/create_vm.yml
+
+# destroy virtual machine
+ansible-playbook tests/destroy_vm.yml
 ```

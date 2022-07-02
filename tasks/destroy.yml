@@ -1,7 +1,7 @@
 ---
-- name: Destroy instances
+- name: Destroy containers
   include_tasks:
-    file: destroy_instance.yml
+    file: destroy_container.yml
   vars:
     container: "{{ outer_container }}"
   with_items: "{{ containers }}"

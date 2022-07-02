@@ -1,0 +1,107 @@
+---
+# to setup a new VM
+- name: Ensure target directory exists
+  file:
+    path: "{{ work_dir }}/scripts-{{ instance.name }}"
+    state: directory
+    mode: 0755
+
+- name: Copy PowerShell upgrade script
+  win_copy:
+    remote_src: true
+    src: "{{ work_dir }}/scripts/upgrade-powershell.ps1"
+    dest: "{{ work_dir }}/scripts-{{ instance.name }}/upgrade-powershell.ps1"
+  register: upgrade_powershell
+
+- name: Copy WinRM hotfix script
+  win_copy:
+    remote_src: true
+    src: "{{ work_dir }}/scripts/winrm-hotfix.ps1"
+    dest: "{{ work_dir }}/scripts-{{ instance.name }}/winrm-hotfix.ps1"
+  register: winrm_hotfix
+
+- name: Template WinRM setup script
+  template:
+    src: setup-winrm.ps1
+    dest: "{{ work_dir }}/scripts-{{ instance.name }}/setup-winrm.ps1"
+  register: setup_winrm
+
+- name: Template AutoUnattend.xml
+  template:
+    src: AutoUnattend.xml
+    dest: "{{ work_dir }}/scripts-{{ instance.name }}/AutoUnattend.xml"
+  register: autounattend
+
+- name: Template autorun.bat
+  template:
+    src: autorun.bat
+    dest: "{{ work_dir }}/scripts-{{ instance.name }}/autorun.bat"
+  register: autorun
+
+- name: Generate scripts.iso
+  shell: |
+    mkisofs -o {{ libvirt_iso_dir }}/scripts-{{ instance.name }}.iso -J -r {{ work_dir }}/scripts-{{ instance.name }}
+  when: upgrade_powershell is changed or winrm_hotfix is changed or setup_winrm is changed or autounattend is changed or autorun is changed
+  become: true
+  become_user: root
+
+- set_fact:
+   instance_uuid: instance.uuid | default(99999999 | random | to_uuid)
+
+- name: Template instance
+  template:
+    src: instance.xml
+    dest: "{{ work_dir }}/instance-{{ instance.name }}.xml"
+
+- name: Create disk
+  shell: >
+    if [ ! -r "{{ libvirt_image_dir }}/{{ instance.name }}.qcow2" ]; then
+      virsh vol-create-as images {{ instance.name }}.qcow2 {{ instance.disk_size }} --format qcow2 > /dev/null;
+      chown libvirt-qemu:kvm {{ libvirt_image_dir }}/{{ instance.name }}.qcow2;
+      echo "created"
+    fi
+  register: create_disk
+  become: true
+  become_user: root
+  changed_when: create_disk.stdout == "created"
+
+- name: Define virtual machine
+  community.libvirt.virt:
+    command: define
+    xml: "{{ lookup('template', 'instance.xml') }}"
+  become: true
+  become_user: root
+
+- name: Create virtual machine
+  community.libvirt.virt:
+    command: create
+    name: "{{ instance.name }}"
+    xml: "{{ lookup('template', 'instance.xml') }}"
+    state: running
+    autostart: true
+  become: true
+  become_user: root
+
+- name: Wait 3 minutes for windows setup to complete
+  shell: sleep 180
+
+- name: Get virtual machine info
+  community.libvirt.virt:
+    command: info
+    name: "{{ instance.name }}"
+  become: true
+  become_user: root
+  register: virt_info_cmd
+  retries: 10
+  delay: 10
+  until: virt_info_cmd.rc == 0
+
+- debug: var=virt_info_cmd
+
+- name: Add instance {{ instance.name }} to inventory
+  # as {{ .IPAddress }}
+  ansible.builtin.set_fact:
+    virtual_machine_inventory: >
+      {{ virtual_machine_inventory | default([]) + [
+        { 'name': instance.name, 'os': instance.os, 'ip': '' }
+      ] }}

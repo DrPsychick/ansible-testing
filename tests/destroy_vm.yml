@@ -1,0 +1,9 @@
+---
+- name: Test destroy virtual machine
+  hosts: localhost
+  vars:
+    provision_action: 'destroy'
+  vars_files:
+    - virtualmachine.yml
+  roles:
+    - ansible-testing

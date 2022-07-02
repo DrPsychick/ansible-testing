@@ -3,10 +3,18 @@
   include_tasks: dependency.yml
   when: provision_action == 'create'
 
-- name: Create environment
+- name: Create containers
   include_tasks: create.yml
-  when: provision_action == 'create'
+  when: provision_action == 'create' and containers|length > 0
 
-- name: Destroy environment
+- name: Create virtual machines
+  include_tasks: create_libvirt.yml
+  when: provision_action == 'create' and virtual_machines|length > 0
+
+- name: Destroy containers
   include_tasks: destroy.yml
-  when: provision_action == 'destroy'
+  when: provision_action == 'destroy' and containers|length > 0
+
+- name: Destroy virtual machines
+  include_tasks: destroy_libvirt.yml
+  when: provision_action == 'destroy' and virtual_machines|length > 0

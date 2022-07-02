@@ -19,14 +19,15 @@
     src: "{{ work_dir + '/' + ssh_keyfile }}.pub"
   register: ssh_key_pub
 
-- name: Build and create instances
+- name: Build and create containers
   ansible.builtin.include_tasks:
-    file: create_instance.yml
+    file: create_container.yml
   vars:
     container: "{{ outer_container }}"
   with_items: "{{ containers }}"
   loop_control:
     loop_var: "outer_container"
+  when: containers|length > 0
 
 - name: Generate docker inventory
   ansible.builtin.copy:
@@ -36,9 +37,10 @@
       all:
         hosts:
       {% for container in container_inventory %}
-          {{ container.name }}
+          {{ container.name }}:
             ansible_connection: docker
       {% endfor %}
+  when: containers|length > 0
 
 # - name: Generate inventory
 #  ansible.builtin.copy:
