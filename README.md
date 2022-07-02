@@ -21,6 +21,7 @@ Requirements:
 * Docker
 * libvirt (for Windows virtual machines)
 
+# Test with Docker containers (Linux)
 ## Standalone
 Write your own playbook or use the playbooks in `tests`
 ```shell
@@ -44,7 +45,7 @@ Requirements
 * `pip3 install -U molecule molecule-docker`
 
 Adjust the `molecule/default/vars.yml` to define which containers to provision.
-Then adjust the `platforms` in `molecule.yml` accordingly.
+Then adjust the `platforms` in `molecule/default/molecule.yml` accordingly.
 
 `vars.yml`
 ```yaml
@@ -92,8 +93,8 @@ molecule destroy
 molecule test
 ```
 
-## Test with Windows VMs
-### Prerequisites
+# Test with Windows VMs
+## Prerequisites
 * install `libvirt`, `libvirt-clients`, `virtinst`
 * ansible-galaxy `community.libvirt`
 * for Ansible to connect with WinRM: `python3-winrm`
@@ -108,7 +109,7 @@ sudo curl -Lo /var/lib/libvirt/isos/WindowsServer2016.iso http://care.dlservice.
 sudo curl -Lo /var/lib/libvirt/isos/virtio-win.iso https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso
 ```
 
-### Standalone
+## Standalone
 ```shell
 ansible-galaxy install -r requirements.yml
 
@@ -121,4 +122,15 @@ ansible-playbook tests/create_vm.yml
 
 # destroy virtual machine
 ansible-playbook tests/destroy_vm.yml
+```
+
+## With Ansible `molecule`
+Create your role, then copy the `docs/molecule` directory into your roles directory. 
+
+Adjust the `molecule/libvirt/vars.yml` to define which containers to provision.
+Then adjust the `platforms` in `molecule/libvirt/molecule.yml` accordingly.
+
+```shell
+# run the scenario "libvirt"
+molecule test -s libvirt
 ```
