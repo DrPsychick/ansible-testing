@@ -23,7 +23,7 @@
               'winrm_transport': 'basic',
               'user': 'Administrator',
               'password': '{{ item.password }}',
-              'port', '5985',
+              'port': 5985,
               }
           with_items: "{{ virtual_machine_inventory }}"
           register: instance_config_dict
