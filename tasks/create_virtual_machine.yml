@@ -85,10 +85,6 @@
   become: true
   become_user: root
 
-- name: Wait 5 minutes for windows setup to complete
-  shell: sleep {{ 5 * 60 }}
-  when: create_vm is changed
-
 - name: Get virtual machine info
   community.libvirt.virt:
     command: info

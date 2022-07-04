@@ -25,6 +25,10 @@
   loop_control:
     loop_var: "outer_instance"
 
+- name: Wait 5 minutes for windows setup to complete
+  shell: sleep {{ 5 * 60 }}
+  when: create_vm is changed
+
 - name: Generate virsh inventory
   ansible.builtin.copy:
     dest: "{{ work_dir }}/virsh_inventory"
