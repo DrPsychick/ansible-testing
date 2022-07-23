@@ -50,7 +50,8 @@
   become: true
   become_user: root
 
-- set_fact:
+- name: Set instance_uuid variable
+  ansible.builtin.set_fact:
     instance_uuid: "{{ instance.uuid | default(99999999 | random | to_uuid) }}"
 
 - name: Template instance
