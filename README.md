@@ -13,6 +13,17 @@ Check [defaults/main.yml](defaults/main.yml) see how to define containers and ad
 * Define your own `work_dir`. The contents are temporary and will be removed with `destroy`!
 * Define the containers you want to spin up.
 
+## What it does (in a nutshell)
+This role has `create` and `destroy` tasks for containers and virtual machines. It loops over the configured lists 
+(`containers` or `virtual_machines` in `vars.yml`) and creates the instances accordingly. 
+Each Molecule scenario must either use containers **or** virtual machines, because Molecule only supports a single driver per scenario.
+
+Linux: It creates privileged docker containers that are started with `/sbin/init` to have a fully SystemD capable instance.
+
+Windows: It creates the VM (unattended install of Windows) and configures WinRM for Ansible (plain HTTP) upon first start.
+
+**Hint:** Creating Windows VMs is expensive and takes over 10 Minutes.
+
 # Contributing
 If you have other systems you want to test, feel free to provide a PR with additional Dockerfiles or libvirt configuration.
 
@@ -37,7 +48,7 @@ cd $YourRoleDir/molecule/default
 ln -s $WhereYourForkIs/ansible-testing drpsychick.ansible_testing
 
 # comment out role in requirements and delete downloaded version
-sed -e 's/^ /^# /' requirements.yml
+sed -i -e 's/^ /^# /' requirements.yml
 rm -rf ~/.cache/molecule/$YourRoleName/default/roles/drpsychick.ansible_testing
 ```
 
