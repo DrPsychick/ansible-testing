@@ -8,28 +8,13 @@ cache: pip
 services:
   - docker
 
-env:
-  global:
-    - GREEN='\033[0;32m'
-    - RED='\033[0;31m'
-    - NC='\033[0m' # No Color
-
 install:
-  - pip3 install -U ansible jq docker molecule molecule-docker
-  - printf "[defaults]\nroles_path = ../" > ansible.cfg
+  - pip3 install -U ansible ansible-lint jq docker molecule molecule-docker
+
+before_script:
+  - molecule lint
 
 script:
-  # old style manual test
-  - ansible-playbook tests/create.yml --syntax-check
-  - yes | ansible-playbook tests/create.yml --connection=local
-  - >
-    result=$(yes | ansible-playbook tests/create.yml --connection=local);
-    echo "$result" | grep -q 'changed=0.*failed=0'
-    && (echo -e "Idempotence test: ${GREEN}pass${NC}"; exit 0)
-    || (echo -e "Idempotence test: ${RED}fail${NC}"; echo -e "$result"; exit 1);
-  - yes | ansible-playbook tests/destroy.yml --connection=local
-  # automated test with molecule
-  - rm ansible.cfg
   - molecule test
 
 notifications:

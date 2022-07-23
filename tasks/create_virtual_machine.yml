@@ -1,62 +1,69 @@
 ---
 # to setup a new VM
 - name: Ensure target directory exists
-  file:
+  ansible.builtin.file:
     path: "{{ work_dir }}/scripts-{{ instance.name }}"
     state: directory
     mode: 0755
 
 - name: Copy PowerShell upgrade script
-  copy:
+  ansible.builtin.copy:
     remote_src: true
     src: "{{ work_dir }}/scripts/upgrade-powershell.ps1"
     dest: "{{ work_dir }}/scripts-{{ instance.name }}/upgrade-powershell.ps1"
+    mode: 0644
   register: upgrade_powershell
 
 - name: Copy WinRM hotfix script
-  copy:
+  ansible.builtin.copy:
     remote_src: true
     src: "{{ work_dir }}/scripts/winrm-hotfix.ps1"
     dest: "{{ work_dir }}/scripts-{{ instance.name }}/winrm-hotfix.ps1"
+    mode: 0644
   register: winrm_hotfix
 
 - name: Template WinRM setup script
-  template:
+  ansible.builtin.template:
     src: setup-winrm.ps1
     dest: "{{ work_dir }}/scripts-{{ instance.name }}/setup-winrm.ps1"
+    mode: 0644
   register: setup_winrm
 
 - name: Template AutoUnattend.xml
-  template:
+  ansible.builtin.template:
     src: AutoUnattend.xml
     dest: "{{ work_dir }}/scripts-{{ instance.name }}/AutoUnattend.xml"
+    mode: 0644
   register: autounattend
 
 - name: Template autorun.bat
-  template:
+  ansible.builtin.template:
     src: autorun.bat
     dest: "{{ work_dir }}/scripts-{{ instance.name }}/autorun.bat"
+    mode: 0644
   register: autorun
 
 - name: Generate scripts.iso
-  shell: |
+  ansible.builtin.shell: |
     mkisofs -o {{ libvirt_iso_dir }}/scripts-{{ instance.name }}.iso -J -r {{ work_dir }}/scripts-{{ instance.name }}
   when: upgrade_powershell is changed or winrm_hotfix is changed or setup_winrm is changed or autounattend is changed or autorun is changed
   become: true
   become_user: root
 
-- set_fact:
-   instance_uuid: "{{ instance.uuid | default(99999999 | random | to_uuid) }}"
+- name: Set instance_uuid variable
+  ansible.builtin.set_fact:
+    instance_uuid: "{{ instance.uuid | default(99999999 | random | to_uuid) }}"
 
 - name: Template instance
-  template:
+  ansible.builtin.template:
     src: instance.xml
     dest: "{{ work_dir }}/instance-{{ instance.name }}.xml"
+    mode: 0644
   register: instance_template
   changed_when: instance_template is changed and instance.uuid is defined
 
 - name: Create disk
-  shell: >
+  ansible.builtin.shell: >
     if [ ! -r "{{ libvirt_image_dir }}/{{ instance.name }}.qcow2" ]; then
       virsh vol-create-as images {{ instance.name }}.qcow2 {{ instance.disk_size }} --format qcow2 > /dev/null;
       chown libvirt-qemu:kvm {{ libvirt_image_dir }}/{{ instance.name }}.qcow2;
@@ -97,7 +104,7 @@
   until: not virt_info_cmd.failed and virt_info_cmd[instance.name].state == "running"
 
 - name: Get virtual machine IP
-  shell: virsh domifaddr {{ instance.name }} | grep 'ipv4' | awk '{print $4}' | awk -F/ '{print $1}'
+  ansible.builtin.shell: set -o pipefail && virsh domifaddr {{ instance.name }} | grep 'ipv4' | awk '{print $4}' | awk -F/ '{print $1}'
   register: vm_ip
   become: true
   become_user: root

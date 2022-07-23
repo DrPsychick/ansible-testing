@@ -6,7 +6,7 @@
     state: shutdown
   become: true
   become_user: root
-  ignore_errors: true
+  failed_when: false
 
 - name: Delete virtual machine
   community.libvirt.virt:
@@ -15,21 +15,23 @@
     state: destroyed
   become: true
   become_user: root
-  ignore_errors: true
+  failed_when: false
 
 - name: Check for image
-  stat:
+  ansible.builtin.stat:
     path: "{{ libvirt_image_dir }}/{{ instance.name }}.qcow2"
   register: image_file
 
 - name: Delete image
-  shell: virsh vol-delete {{ instance.name }}.qcow2 --pool images
+  ansible.builtin.shell: virsh vol-delete {{ instance.name }}.qcow2 --pool images
   become: true
   become_user: root
   when: image_file.stat.exists
-  ignore_errors: true
+  failed_when: false
+  tags:
+    - skip_ansible_lint
 
 - name: Delete directory
-  file:
+  ansible.builtin.file:
     path: "{{ work_dir }}/scripts-{{ instance.name }}"
     state: absent
