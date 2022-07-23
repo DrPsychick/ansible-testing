@@ -1,24 +1,26 @@
 ---
 - name: Ensure target directory exists
-  file:
+  ansible.builtin.file:
     path: "{{ work_dir }}/scripts"
     state: directory
     mode: 0755
 
 - name: Download PowerShell upgrade script
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ libvirt_upgrade_powershell_url }}"
     dest: "{{ work_dir }}/scripts/upgrade-powershell.ps1"
+    mode: 0644
   register: upgrade_powershell
 
 - name: Download WinRM hotfix script
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ libvirt_winrm_hotfix_url }}"
     dest: "{{ work_dir }}/scripts/winrm-hotfix.ps1"
+    mode: 0644
   register: winrm_hotfix
 
 - name: Create virtual machines
-  include_tasks: create_virtual_machine.yml
+  ansible.builtin.include_tasks: create_virtual_machine.yml
   vars:
     instance: "{{ outer_instance }}"
   with_items: "{{ virtual_machines }}"
@@ -40,7 +42,7 @@
     method: POST
     headers:
       Content-Type: application/soap+xml;charset=UTF-8
-    force_basic_auth: yes
+    force_basic_auth: true
     url_username: Administrator
     url_password: "{{ item.password }}"
     body: |
@@ -72,7 +74,7 @@
         <s:Body/>
       </s:Envelope>
     status_code: 200
-    return_content: yes
+    return_content: true
   register: winrm_login
   retries: 20
   delay: 10

@@ -1,6 +1,6 @@
 ---
 - name: Destroy containers
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: destroy_container.yml
   vars:
     container: "{{ outer_container }}"
