@@ -5,6 +5,8 @@ dependency:
     requirements-file: requirements.yml
 driver:
   name: docker
+lint: |
+  ansible-lint
 platforms:
   - name: fedora36
   - name: ubuntu2204
