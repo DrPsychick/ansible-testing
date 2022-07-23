@@ -9,7 +9,7 @@ services:
   - docker
 
 install:
-  - pip3 install -U ansible yamllint jq docker molecule molecule-docker
+  - pip3 install -U ansible ansible-lint jq docker molecule molecule-docker
 
 before_script:
   - molecule lint

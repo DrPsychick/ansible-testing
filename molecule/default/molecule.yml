@@ -10,7 +10,6 @@ lint: |
 platforms:
   - name: fedora36
   - name: ubuntu2204
-#  - name: centos7
 provisioner:
   name: ansible
 verifier:
