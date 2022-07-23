@@ -19,7 +19,7 @@ If you have other systems you want to test, feel free to provide a PR with addit
 Contributing is really easy:
 1. Fork the project on GitHub : https://github.com/DrPsychick/ansible-testing
 2. Checkout the fork on your Linux box
-3. Symlink the role in your roles Molecule scenario (i.e. `./molecule/default/`)
+3. Symlink the fork in your roles Molecule scenario (i.e. `./molecule/default/`)
 4. Make changes and test your role with them until you're happy - commit and create a pull-request
 
 ```shell
@@ -53,30 +53,14 @@ Requirements:
 * libvirt (for Windows virtual machines)
 
 # Test with Docker containers (Linux)
-## Standalone
-Write your own playbook or use the playbooks in `tests`
-```shell
-ansible-galaxy install -r requirements.yml
-
-# edit tests/provision.yml to your needs
-echo "[defaults]
-roles_path = .." > ansible.cfg
-
-# create containers
-ansible-playbook tests/create.yml
-
-# destroy containers
-ansible-playbook tests/destroy.yml
-```
-
-## With Ansible `molecule`
 Requirements
 * `pip3 install -U molecule molecule-docker`
 
+## With Ansible `molecule`
 Create a new role with `molecule init role <name>` or initialize the Molecule scenario in an existing role directory with
 `molecule init scenario default`.
 
-Download the example files from this repo which make use of this role:
+Download the example files from this repo which make use of this role (in `create` and `destroy`):
 ```shell
 for f in create destroy molecule requirements vars; do
   curl -o molecule/default/$f.yml https://raw.githubusercontent.com/DrPsychick/ansible-testing/master/docs/molecule/default/$f.yml
@@ -101,7 +85,7 @@ containers:
 platforms:
   - name: fedora36
   - name: ubuntu2204
-  - name: centos8
+  - name: centos7
 [...]
 ```
 
@@ -121,8 +105,25 @@ molecule destroy
 molecule test
 ```
 
+## Standalone
+Write your own playbook or use the playbooks in `tests`
+```shell
+ansible-galaxy install -r requirements.yml
+
+# edit tests/provision.yml to your needs
+echo "[defaults]
+roles_path = .." > ansible.cfg
+
+# create containers
+ansible-playbook tests/create.yml
+
+# destroy containers
+ansible-playbook tests/destroy.yml
+```
+
+
 # Test with Windows VMs
-## Prerequisites
+Requirements
 * install `libvirt`, `libvirt-clients`, `virtinst`
 * ansible-galaxy `community.libvirt`
 * for Ansible to connect with WinRM: `python3-winrm`
@@ -135,6 +136,25 @@ molecule test
 # download the ISOs
 sudo curl -Lo /var/lib/libvirt/isos/WindowsServer2016.iso http://care.dlservice.microsoft.com/dl/download/1/6/F/16FA20E6-4662-482A-920B-1A45CF5AAE3C/14393.0.160715-1616.RS1_RELEASE_SERVER_EVAL_X64FRE_EN-US.ISO
 sudo curl -Lo /var/lib/libvirt/isos/virtio-win.iso https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso
+```
+
+## With Ansible `molecule`
+Create a new role with `molecule init role <name>` or initialize the Molecule scenario in an existing role directory with
+`molecule init scenario default`.
+
+Download the example files from this repo which make use of this role (in `create` and `destroy`):
+```shell
+for f in create destroy molecule requirements vars; do
+  curl -o molecule/libvirt/$f.yml https://raw.githubusercontent.com/DrPsychick/ansible-testing/master/docs/molecule/libvirt/$f.yml
+done
+```
+
+Adjust the `molecule/libvirt/vars.yml` to define which containers to provision.
+Then adjust the `platforms` in `molecule/libvirt/molecule.yml` accordingly.
+
+```shell
+# run the scenario "libvirt"
+molecule test -s libvirt
 ```
 
 ## Standalone
@@ -150,15 +170,4 @@ ansible-playbook tests/create_vm.yml
 
 # destroy virtual machine
 ansible-playbook tests/destroy_vm.yml
-```
-
-## With Ansible `molecule`
-Create your role, then copy the `docs/molecule` directory into your roles directory. 
-
-Adjust the `molecule/libvirt/vars.yml` to define which containers to provision.
-Then adjust the `platforms` in `molecule/libvirt/molecule.yml` accordingly.
-
-```shell
-# run the scenario "libvirt"
-molecule test -s libvirt
 ```
