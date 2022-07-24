@@ -17,12 +17,12 @@
         - name: Populate instance config dict
           ansible.builtin.set_fact:
             instance_conf_dict: {
-              'instance': "{{ item.name }}",
-              'address': "{{ item.ip }}",
+              'instance': "{{ virtual_machine_inventory[item].name }}",
+              'address': "{{ virtual_machine_inventory[item].ip }}",
               'connection': 'winrm',
               'winrm_transport': 'basic',
               'user': 'Administrator',
-              'password': '{{ item.password }}',
+              'password': '{{ virtual_machine_inventory[item].password }}',
               'port': 5985,
               }
           with_items: "{{ virtual_machine_inventory }}"

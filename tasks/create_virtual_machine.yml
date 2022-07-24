@@ -103,18 +103,10 @@
   delay: 10
   until: not virt_info_cmd.failed and virt_info_cmd[instance.name].state == "running"
 
-- name: Get virtual machine IP
-  ansible.builtin.shell: set -o pipefail && virsh domifaddr {{ instance.name }} | grep 'ipv4' | awk '{print $4}' | awk -F/ '{print $1}'
-  register: vm_ip
-  become: true
-  become_user: root
-  changed_when: false
-  failed_when: not vm_ip.stdout | regex_search('[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+')
-
 - name: Add instance {{ instance.name }} to inventory
   # as {{ .IPAddress }}
   ansible.builtin.set_fact:
     virtual_machine_inventory: >
-      {{ virtual_machine_inventory | default([]) + [
-        { 'name': instance.name, 'os': instance.os, 'ip': vm_ip.stdout, 'password': instance.password }
-      ] }}
+      {{ virtual_machine_inventory | default({}) | combine( { instance.name:
+        { 'name': instance.name, 'os': instance.os, 'password': instance.password }
+      } ) }}
