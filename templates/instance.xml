@@ -14,7 +14,11 @@
   </resource>
   <os>
     <type arch='x86_64' machine='pc-q35-4.2'>hvm</type>
+{% if instance.disk_image is defined %}
+    <boot dev="hd"/>
+{% else %}
     <boot dev="cdrom"/>
+{% endif %}
   </os>
   <features>
     <acpi/>
@@ -64,13 +68,13 @@
     <emulator>/usr/bin/qemu-system-x86_64</emulator>
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2'/>
-      <source file='{{ libvirt_image_dir }}/{{ instance.name }}.qcow2' index='{{ instance.isos|length + 1 }}'/>
+      <source file='{{ libvirt_image_dir }}/{{ instance.name }}.qcow2' index='{{ instance.isos|default([])|length + 1 }}'/>
       <backingStore/>
       <target dev='vda' bus='virtio'/>
       <alias name='virtio-disk0'/>
       <address type='pci' domain='0x0000' bus='0x03' slot='0x00' function='0x0'/>
     </disk>
-{% for iso in instance.isos %}
+{% for iso in instance.isos|default([]) %}
     <disk type='file' device='cdrom'>
       <driver name='qemu' type='raw'/>
       <source file='{{ libvirt_iso_dir }}/{{ iso.name }}' index='{{ instance.isos|length - loop.index + 1 }}'/>

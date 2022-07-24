@@ -10,7 +10,8 @@
   community.docker.docker_image:
     name: "{{ container.name }}"
     source: build
-    force_source: true
+    # not --check safe
+    # force_source: true
     build:
       dockerfile: "{{ work_dir }}/{{ container.dockerfile }}"
       path: "{{ work_dir }}"
