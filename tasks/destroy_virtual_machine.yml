@@ -1,17 +1,16 @@
 ---
-- name: Stop virtual machine
+- name: Destroy virtual machine
   community.libvirt.virt:
-    command: stop
     name: "{{ instance.name }}"
-    state: shutdown
+    state: destroyed
   become: true
   become_user: root
   failed_when: false
 
 - name: Delete virtual machine
   community.libvirt.virt:
-    command: undefine
     name: "{{ instance.name }}"
+    command: undefine
   become: true
   become_user: root
   failed_when: false
