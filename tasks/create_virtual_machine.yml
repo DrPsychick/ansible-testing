@@ -84,10 +84,10 @@
   become_user: root
   when: instance.disk_image_url is defined and instance.disk_image is defined
 
-- name: Copy disk image
+- name: Unarchive disk image
   ansible.builtin.unarchive:
     src: "{{ libvirt_iso_dir }}/{{ instance.disk_image }}"
-    dest: "{{ libvirt_image_dir }}/{{ instance.name }}.qcow2"
+    dest: "{{ libvirt_image_dir }}/"
     mode: 0644
     remote_src: true
   become: true

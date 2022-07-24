@@ -14,7 +14,11 @@
   </resource>
   <os>
     <type arch='x86_64' machine='pc-q35-4.2'>hvm</type>
+{% if instance.disk_image is defined %}
+    <boot dev="disk"/>
+{% else %}
     <boot dev="cdrom"/>
+{% endif %}
   </os>
   <features>
     <acpi/>
