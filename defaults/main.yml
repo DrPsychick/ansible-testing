@@ -40,6 +40,9 @@ virtual_machines: []
 #        dev: sdc
 #    # disk: "windows2016.qcow2" default
 #    disk_size: 20G
+#    # optionally download or use a prepared image to boot from
+#    disk_image_url: "https://yourdownload.server/image.qcow2"
+#    disk_image: "windows2016-clean.qcow2"
 #    image_index: 2
 #    # image_name: "Windows Server 2016 Standard Evaluation (Desktop Experience)" # did not work?
 #    drivers:

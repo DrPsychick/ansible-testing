@@ -73,6 +73,22 @@
   become: true
   become_user: root
   changed_when: create_disk.stdout == "created"
+  when: instance.disk_size is defined and instance.disk_image is not defined
+
+- name: Download disk image
+  ansible.builtin.get_url:
+    url: "{{ instance.disk_image_url }}"
+    dest: "{{ libvirt_iso_dir }}/{{ instance.disk_image }}"
+    mode: 0644
+  when: instance.disk_image_url is defined and instance.disk_image is defined
+
+- name: Copy disk image
+  ansible.builtin.copy:
+    src: "{{ libvirt_iso_dir }}/{{ instance.disk_image }}"
+    dest: "{{ libvirt_image_dir }}/{{ instance.name }}.qcow2"
+    mode: 0644
+    remote_src: true
+  when: instance.disk_image is defined
 
 - name: Define virtual machine
   community.libvirt.virt:
