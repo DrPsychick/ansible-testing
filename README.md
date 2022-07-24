@@ -182,3 +182,10 @@ ansible-playbook tests/create_vm.yml
 # destroy virtual machine
 ansible-playbook tests/destroy_vm.yml
 ```
+
+## Using predefined Windows images to speed up provisioning
+A full spin-up (create) run for 2 Windows instances with predefined images took **less than 4 minutes** on my i7.
+1. Create a `qcow2` image or simply provision a VM once with unattended install
+2. Create a zip from the ready to use VM: `zip windows2016-clean.qcow2.zip windows2016.qcow2`
+   (the filename must match and be in the root of the zip file - with no path)
+3. Move the zip file to `libvirt_iso_dir` or provide it via URL (`disk_image_url`)
