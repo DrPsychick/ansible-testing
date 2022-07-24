@@ -52,10 +52,12 @@
 - name: Generate scripts.iso
   ansible.builtin.shell: |
     mkisofs -o {{ libvirt_iso_dir }}/scripts-{{ instance.name }}.iso -J -r {{ work_dir }}/scripts-{{ instance.name }}
-  when: upgrade_powershell is changed or winrm_hotfix is changed or setup_winrm is changed or autounattend is changed or autorun is changed
+  when: instance.disk_image is not defined and (
+      upgrade_powershell is changed or winrm_hotfix is changed or setup_winrm is changed 
+      or autounattend is changed or autorun is changed
+    )
   become: true
   become_user: root
-  when: instance.disk_image is not defined
 
 - name: Set instance_uuid variable
   ansible.builtin.set_fact:

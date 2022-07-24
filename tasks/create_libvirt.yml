@@ -40,11 +40,13 @@
   retries: 30
   delay: 10
   until: vm_ips is not failed
+  tags:
+    - skip_ansible_lint
 
 - name: Add IPs to inventory
-  set_fact:
-    virtual_machine_inventory: "{{ virtual_machine_inventory | combine( 
-      { item.item: { 'ip': item.stdout } }, recursive=True 
+  ansible.builtin.set_fact:
+    virtual_machine_inventory: "{{ virtual_machine_inventory | combine(
+      { item.item: { 'ip': item.stdout } }, recursive=True
     ) }}"
   with_items: "{{ vm_ips.results }}"
 
