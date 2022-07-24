@@ -13,6 +13,8 @@ containers: []
 
 libvirt_upgrade_powershell_url: "https://raw.githubusercontent.com/jborean93/ansible-windows/master/scripts/Upgrade-PowerShell.ps1"
 libvirt_winrm_hotfix_url: "https://raw.githubusercontent.com/jborean93/ansible-windows/master/scripts/Install-WMF3Hotfix.ps1"
+# if you change this, make sure the image directory is defined as storage pool in libvirt
+# see `virsh pool-dumpxml images`
 libvirt_image_dir: "/var/lib/libvirt/images"
 libvirt_iso_dir: "/var/lib/libvirt/isos"
 
@@ -22,6 +24,7 @@ libvirt_defaults:
     memory: 4194304
 
 virtual_machines: []
+# Unattended install (requires ISOs to be downloaded, drivers to be loaded etc.)
 #  - name: "windows2016"
 #    #uuid: "c3cedf53-bf5b-4271-881c-ab6380ea1847" # default is generated
 #    #hostname: "windows2016" # default to name
@@ -52,3 +55,12 @@ virtual_machines: []
 #      - 'E:\Balloon\2k16\amd64'
 #    mac: "02:00:00:00:13:37"
 #    vnc_port: 56682
+# Create a VM from a predefined image which has WinRM already setup, speeds up instance creation significantly
+# You can simply use the result of an unattended install (zip windows2019-clean.qcow2.zip windows2019.qcow2)
+#  - name: "windows2019"
+#    password: "Ecoo6pev"
+#    os: "windows"
+#    # disk_image_url: provide a URL to download
+#    disk_image: "windows2019-clean.qcow2.zip"
+#    mac: "02:00:00:00:13:38"
+#    vnc_port: 56683

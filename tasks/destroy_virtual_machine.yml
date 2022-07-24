@@ -33,5 +33,5 @@
 
 - name: Delete directory
   ansible.builtin.file:
-    path: "{{ work_dir }}/scripts-{{ instance.name }}"
+    path: "{{ work_dir }}"
     state: absent
