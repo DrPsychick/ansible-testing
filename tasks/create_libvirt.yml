@@ -29,6 +29,7 @@
 
 - name: Wait to get virtual machine IPs
   ansible.builtin.shell: |
+    set -o pipefail
     virsh domifaddr {{ item }} | grep 'ipv4' | awk '{print $4}' | awk -F/ '{print $1}'
   register: vm_ips
   become: true

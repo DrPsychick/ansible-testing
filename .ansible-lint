@@ -5,3 +5,5 @@ skip_list:
   - no-handler
   - yaml[line-length]
   - yaml[empty-lines]
+  - jinja[spacing]
+  - command-instead-of-shell
