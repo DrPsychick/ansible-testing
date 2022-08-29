@@ -1,12 +1,10 @@
 ---
-- name: Required packages
-  ansible.builtin.package:
-    name: "{{ ['python3-setuptools', 'python3-pip'] + (['openssh-client'] if ansible_distribution == 'Ubuntu' else ['openssh-clients']) }}"
-  become: true
-  become_user: root
-
-- name: Required pip packages
-  ansible.builtin.pip:
-    name: ["docker"]
-  become: true
-  become_user: root
+- name: Check for required packages
+  ansible.builtin.shell: >
+    pip3 || echo "pip3 missing";
+    ssh -G localhost || echo "openssh-client missing";
+    python3 -c 'import setuptools' || echo "setuptools python library missing";
+    python3 -c 'import docker' || echo "docker python library missing";
+  register: required_packages
+  changed_when: false
+  failed_when: "'missing' in required_packages.stdout"
