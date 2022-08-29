@@ -17,3 +17,18 @@
         max-size: "100m"
   roles:
     - geerlingguy.docker
+
+- name: Install required packages
+  hosts: all
+  tasks:
+    - name: Required packages
+      ansible.builtin.package:
+        name: "{{ ['python3-setuptools', 'python3-pip'] + (['openssh-client'] if ansible_distribution == 'Ubuntu' else ['openssh-clients']) }}"
+      become: true
+      become_user: root
+
+    - name: Required pip packages
+      ansible.builtin.pip:
+        name: ["docker"]
+      become: true
+      become_user: root
