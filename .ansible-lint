@@ -7,3 +7,6 @@ skip_list:
   - yaml[empty-lines]
   - jinja[spacing]
   - command-instead-of-shell
+  - template-instead-of-copy # copy with 'content' that contains variables
+  - name[template] # variables in task names that are not at the end
+
