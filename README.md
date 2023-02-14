@@ -48,7 +48,7 @@ cd $YourRoleDir/molecule/default
 ln -s $WhereYourForkIs/ansible-testing drpsychick.ansible_testing
 
 # comment out role in requirements and delete downloaded version
-sed -i -e 's/^ /^# /' requirements.yml
+sed -i -e 's/^ /# /' requirements.yml
 rm -rf ~/.cache/molecule/$YourRoleName/default/roles/drpsychick.ansible_testing
 ```
 
