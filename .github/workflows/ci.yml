@@ -24,4 +24,5 @@ jobs:
           molecule_working_dir: "${{ github.repository }}"
           molecule_command: test
         env:
-          ANSIBLE_FORCE_COLOR: '1'
+          ANSIBLE_FORCE_COLOR: "1"
+          ANSIBLE_STDOUT_CALLBACK: "debug"

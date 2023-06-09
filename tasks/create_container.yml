@@ -63,14 +63,8 @@
 #      - SETFCAP
 #      - MAC_OVERRIDE
 #      - SYS_CHROOT
+  register: docker_start
 
-- name: Get container info
-  community.docker.docker_container_info:
-    name: "{{ container.name }}"
-  register: container_info
-- name: Debug container_info
-  ansible.builtin.debug:
-    var: container_info
 - name: Get container info
   community.docker.docker_container_info:
     name: "{{ container.name }}"
@@ -78,6 +72,20 @@
   retries: 3
   delay: 3
   until: container_info.container.NetworkSettings.IPAddress != ""
+  ignore_errors: true
+
+- name: Get error logs
+  ansible.builtin.shell: |-
+    docker logs {{ container.name }}
+  register: docker_log
+  when: container_info.container.State.Running == "false" or container_info.container.State.ExitCode != 0
+  changed_when: true
+
+- name: Print logs
+  ansible.builtin.debug:
+    msg: "start {{ docker_start }}\nlogs {{ docker_log }}"
+  when: docker_log is defined
+  failed_when: true
 
 - name: SSH into the container {{ container.name }}
   ansible.builtin.shell: >
