@@ -4,7 +4,7 @@
   ansible.builtin.file:
     path: "{{ work_dir }}/scripts-{{ instance.name }}"
     state: directory
-    mode: 0755
+    mode: "0755"
   when: instance.disk_image is not defined
 
 - name: Copy PowerShell upgrade script
@@ -12,7 +12,7 @@
     remote_src: true
     src: "{{ work_dir }}/scripts/upgrade-powershell.ps1"
     dest: "{{ work_dir }}/scripts-{{ instance.name }}/upgrade-powershell.ps1"
-    mode: 0644
+    mode: "0644"
   register: upgrade_powershell
   when: instance.disk_image is not defined
 
@@ -21,7 +21,7 @@
     remote_src: true
     src: "{{ work_dir }}/scripts/winrm-hotfix.ps1"
     dest: "{{ work_dir }}/scripts-{{ instance.name }}/winrm-hotfix.ps1"
-    mode: 0644
+    mode: "0644"
   register: winrm_hotfix
   when: instance.disk_image is not defined
 
@@ -29,7 +29,7 @@
   ansible.builtin.template:
     src: setup-winrm.ps1
     dest: "{{ work_dir }}/scripts-{{ instance.name }}/setup-winrm.ps1"
-    mode: 0644
+    mode: "0644"
   register: setup_winrm
   when: instance.disk_image is not defined
 
@@ -37,7 +37,7 @@
   ansible.builtin.template:
     src: AutoUnattend.xml
     dest: "{{ work_dir }}/scripts-{{ instance.name }}/AutoUnattend.xml"
-    mode: 0644
+    mode: "0644"
   register: autounattend
   when: instance.disk_image is not defined
 
@@ -45,7 +45,7 @@
   ansible.builtin.template:
     src: autorun.bat
     dest: "{{ work_dir }}/scripts-{{ instance.name }}/autorun.bat"
-    mode: 0644
+    mode: "0644"
   register: autorun
   when: instance.disk_image is not defined
 
@@ -56,6 +56,7 @@
       upgrade_powershell is changed or winrm_hotfix is changed or setup_winrm is changed
       or autounattend is changed or autorun is changed
     )
+  changed_when: true
   become: true
   become_user: root
 
@@ -67,7 +68,7 @@
   ansible.builtin.template:
     src: instance.xml
     dest: "{{ work_dir }}/instance-{{ instance.name }}.xml"
-    mode: 0644
+    mode: "0644"
   register: instance_template
   changed_when: instance_template is changed and instance.uuid is defined
 
@@ -88,7 +89,7 @@
   ansible.builtin.get_url:
     url: "{{ instance.disk_image_url }}"
     dest: "{{ libvirt_iso_dir }}/{{ instance.disk_image }}"
-    mode: 0444
+    mode: "0444"
   become: true
   become_user: root
   when: instance.disk_image_url is defined and instance.disk_image is defined
@@ -97,7 +98,7 @@
   ansible.builtin.unarchive:
     src: "{{ libvirt_iso_dir }}/{{ instance.disk_image }}"
     dest: "{{ libvirt_image_dir }}/"
-    mode: 0644
+    mode: "0644"
     remote_src: true
   become: true
   become_user: root

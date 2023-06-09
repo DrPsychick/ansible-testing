@@ -3,7 +3,7 @@
   ansible.builtin.copy:
     src: "docker/{{ item }}"
     dest: "{{ work_dir }}/{{ item }}"
-    mode: 0644
+    mode: "0644"
   with_items: "{{ container.files + [container.dockerfile] }}"
 
 - name: Build container image {{ container.name }}

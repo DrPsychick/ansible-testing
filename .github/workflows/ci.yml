@@ -11,22 +11,17 @@ on:
 jobs:
   molecule:
     runs-on: ubuntu-latest
-#    strategy:
-#      fail-fast: false
     steps:
+      - name: Install dependencies
+        run: sudo pip3 install molecule-docker
       - name: Checkout
         uses: actions/checkout@v2
         with:
           path: "${{ github.repository }}"
-      - name: Lint
-        uses: gofrolist/molecule-action@v2
-        with:
-          molecule_command: lint
-        env:
-          ANSIBLE_FORCE_COLOR: '1'
       - name: Test
         uses: gofrolist/molecule-action@v2
         with:
+          molecule_working_dir: "${{ github.repository }}"
           molecule_command: test
         env:
           ANSIBLE_FORCE_COLOR: '1'

@@ -29,6 +29,7 @@
 
     - name: Required pip packages
       ansible.builtin.pip:
-        name: ["docker"]
+        # TODO remove after fix: https://github.com/docker/docker-py/issues/3113#issuecomment-1525789561
+        name: ["docker", "requests<2.2.29"]
       become: true
       become_user: root

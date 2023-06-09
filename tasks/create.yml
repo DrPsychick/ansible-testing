@@ -3,7 +3,7 @@
   ansible.builtin.file:
     path: "{{ work_dir }}"
     state: directory
-    mode: 0755
+    mode: "0755"
 
 - name: Generate SSH key
   ansible.builtin.shell: >
@@ -31,7 +31,7 @@
 - name: Generate docker inventory
   ansible.builtin.copy:
     dest: "{{ work_dir }}/docker_inventory"
-    mode: 0644
+    mode: "0644"
     content: |
       all:
         hosts:
