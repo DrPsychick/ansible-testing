@@ -1,0 +1,19 @@
+ARG VERSION=11
+FROM debian:$VERSION-slim
+
+ENV container=docker
+
+STOPSIGNAL SIGRTMIN+3
+
+RUN apt update \
+    && apt install -y systemd dbus openssh-server rsyslog ca-certificates sudo python3 \
+    && apt clean
+
+#RUN sed -i 's/^\(module(load="imklog")\)/#\1/' /etc/rsyslog.conf
+
+COPY entrypoint.sh /
+RUN chmod +x /entrypoint.sh
+
+VOLUME /sys/fs/cgroup
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["/sbin/init"]
