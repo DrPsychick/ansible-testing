@@ -18,26 +18,27 @@
       args: "{{ container.args }}"
 
 # run named container in background with root-SSH
-# - name: Run container {{ container.name }}
-#  community.docker.docker_container:
-#    name: "{{ container.name }}"
-#    hostname: "{{ container.name }}"
-#    image: "{{ container.name }}"
-#    state: started
-#    # required for now to have DBus working
-#    privileged: true
-#    tty: true
-#    cgroupns_mode: host
-#    security_opts:
-#      - seccomp=unconfined
-#    env:
-#      ROOT_KEY: "{{ ssh_key_pub['content'] | b64decode }}"
-#    volumes:
-#      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-#    tmpfs:
-#      - /run
-#      - /run/lock
-#      - /tmp
+- name: Run container {{ container.name }}
+  community.docker.docker_container:
+    name: "{{ container.name }}"
+    hostname: "{{ container.name }}"
+    image: "{{ container.name }}"
+    state: started
+    # required for now to have DBus working
+    privileged: true
+    tty: true
+    security_opts:
+      - seccomp=unconfined
+    env:
+      ROOT_KEY: "{{ ssh_key_pub['content'] | b64decode }}"
+    cgroupns_mode: host
+    volumes:
+      # read-write required to work in GitHub Actions (+cgroupns=host)
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    tmpfs:
+      - /run
+      - /run/lock
+      - /tmp
 # did not work:
 #      {{ ['/run', '/run/lock', '/tmp']
 #      + (['/sys/fs/cgroup/systemd'] if ansible_distribution != 'CentOS' else [])
@@ -65,25 +66,7 @@
 #      - SETFCAP
 #      - MAC_OVERRIDE
 #      - SYS_CHROOT
-#  register: docker_start
-
-- name: Test
-  ansible.builtin.shell: |-
-    docker ps -a
-    docker run --detach --tty --privileged --name {{ container.name }} \
-      --hostname {{ container.name }} \
-      --env ROOT_KEY="{{ ssh_key_pub['content'] | b64decode }}" \
-      --volume /sys/fs/cgroup:/sys/fs/cgroup:rw \
-      --tmpfs /run --tmpfs /run/lock --tmpfs /tmp \
-      --cgroupns host \
-      {{ container.name }}
   register: docker_start
-  changed_when: false
-
-- name: Log test
-  ansible.builtin.debug:
-    msg: "{{ docker_start }}"
-  when: docker_start is not skipped
 
 - name: Get container info
   community.docker.docker_container_info:
