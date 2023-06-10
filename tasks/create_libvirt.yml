@@ -3,20 +3,20 @@
   ansible.builtin.file:
     path: "{{ work_dir }}/scripts"
     state: directory
-    mode: 0755
+    mode: "0755"
 
 - name: Download PowerShell upgrade script
   ansible.builtin.get_url:
     url: "{{ libvirt_upgrade_powershell_url }}"
     dest: "{{ work_dir }}/scripts/upgrade-powershell.ps1"
-    mode: 0644
+    mode: "0644"
   register: upgrade_powershell
 
 - name: Download WinRM hotfix script
   ansible.builtin.get_url:
     url: "{{ libvirt_winrm_hotfix_url }}"
     dest: "{{ work_dir }}/scripts/winrm-hotfix.ps1"
-    mode: 0644
+    mode: "0644"
   register: winrm_hotfix
 
 - name: Create virtual machines
@@ -108,7 +108,7 @@
 - name: Generate virsh inventory
   ansible.builtin.copy:
     dest: "{{ work_dir }}/virsh_inventory"
-    mode: 0644
+    mode: "0644"
     content: |
       all:
         hosts:

@@ -3,7 +3,7 @@
   ansible.builtin.copy:
     src: "docker/{{ item }}"
     dest: "{{ work_dir }}/{{ item }}"
-    mode: 0644
+    mode: "0644"
   with_items: "{{ container.files + [container.dockerfile] }}"
 
 - name: Build container image {{ container.name }}
@@ -26,21 +26,24 @@
     state: started
     # required for now to have DBus working
     privileged: true
+    tty: true
     security_opts:
       - seccomp=unconfined
     env:
       ROOT_KEY: "{{ ssh_key_pub['content'] | b64decode }}"
+    cgroupns_mode: host
     volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      # read-write required to work in GitHub Actions (+cgroupns=host)
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
     tmpfs:
+      - /run
+      - /run/lock
+      - /tmp
 # did not work:
 #      {{ ['/run', '/run/lock', '/tmp']
 #      + (['/sys/fs/cgroup/systemd'] if ansible_distribution != 'CentOS' else [])
 #      + (['/var/lib/journal'] if ansible_distribution == 'Ubuntu' else [])
 #      }}
-      - /run
-      - /run/lock
-      - /tmp
 #      - /sys/fs/cgroup/systemd # NOT for centos7
 #      - /var/lib/journal
 # only got DBus to work with 'privileged' :(
@@ -63,12 +66,28 @@
 #      - SETFCAP
 #      - MAC_OVERRIDE
 #      - SYS_CHROOT
+  register: docker_start
 
 - name: Get container info
   community.docker.docker_container_info:
     name: "{{ container.name }}"
   register: container_info
-# - debug: var=container_info
+  retries: 3
+  delay: 3
+  until: container_info.container.NetworkSettings.IPAddress != ""
+  ignore_errors: true
+
+- name: Get error logs
+  ansible.builtin.shell: |-
+    docker logs {{ container.name }}
+  register: docker_log
+  when: container_info.container.State.Running == "false" or container_info.container.State.ExitCode != 0
+  changed_when: false
+
+- name: Print logs
+  ansible.builtin.debug:
+    msg: "start {{ docker_start }}\nlogs {{ docker_log }}"
+  when: docker_log is not skipped
 
 - name: SSH into the container {{ container.name }}
   ansible.builtin.shell: >

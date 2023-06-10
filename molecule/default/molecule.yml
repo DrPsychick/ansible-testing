@@ -8,8 +8,9 @@ driver:
 lint: |
   ansible-lint
 platforms:
-  - name: fedora36
   - name: ubuntu2204
+  - name: fedora38
+#  - name: debian11
 provisioner:
   name: ansible
 verifier:
