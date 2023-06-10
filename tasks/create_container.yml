@@ -84,8 +84,7 @@
 - name: Print logs
   ansible.builtin.debug:
     msg: "start {{ docker_start }}\nlogs {{ docker_log }}"
-  when: docker_log is defined
-  failed_when: true
+  when: docker_log is not skipped
 
 - name: SSH into the container {{ container.name }}
   ansible.builtin.shell: >

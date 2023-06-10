@@ -12,8 +12,6 @@ jobs:
   molecule:
     runs-on: ubuntu-latest
     steps:
-      - name: Install dependencies
-        run: sudo pip3 install molecule-docker
       - name: Checkout
         uses: actions/checkout@v2
         with:
