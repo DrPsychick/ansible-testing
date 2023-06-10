@@ -72,7 +72,7 @@
       --hostname {{ container.name }} \
       --env ROOT_KEY="{{ ssh_key_pub['content'] | b64decode }}" \
       --volume /sys/fs/cgroup:/sys/fs/cgroup:ro \
-      --tmpfs /run,/run/lock,/tmp \
+      --tmpfs /run --tmpfs /run/lock --tmpfs /tmp \
       {{ container.name }}
   register: docker_start
   changed_when: false
