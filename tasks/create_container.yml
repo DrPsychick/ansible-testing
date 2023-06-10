@@ -68,7 +68,7 @@
 - name: Test
   ansible.builtin.shell: |-
     docker ps -a
-    docker run --privileged --name {{ container.name }} \
+    docker run --detach --tty --privileged --name {{ container.name }} \
       --hostname {{ container.name }} \
       --env ROOT_KEY="{{ ssh_key_pub['content'] | b64decode }}" \
       --volume /sys/fs/cgroup:/sys/fs/cgroup:ro \
