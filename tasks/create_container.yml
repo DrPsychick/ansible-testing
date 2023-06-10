@@ -26,6 +26,7 @@
 #    state: started
 #    # required for now to have DBus working
 #    privileged: true
+#    tty: true
 #    security_opts:
 #      - seccomp=unconfined
 #    env:
@@ -73,6 +74,7 @@
       --env ROOT_KEY="{{ ssh_key_pub['content'] | b64decode }}" \
       --volume /sys/fs/cgroup:/sys/fs/cgroup:ro \
       --tmpfs /run --tmpfs /run/lock --tmpfs /tmp \
+      --cgroupns host \
       {{ container.name }}
   register: docker_start
   changed_when: false
