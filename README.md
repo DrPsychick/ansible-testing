@@ -85,7 +85,7 @@ Then adjust the `platforms` in `molecule/default/molecule.yml` accordingly.
 ```yaml
 work_dir: "/tmp/ansible-testrole-default"
 containers:
-  - { name: fedora36, os: fedora, dockerfile: Dockerfile_Fedora, files: ["entrypoint.sh"], args: { VERSION: 36 } }
+  - { name: fedora38, os: fedora, dockerfile: Dockerfile_Fedora, files: ["entrypoint.sh"], args: { VERSION: 38 } }
   - { name: ubuntu2204, os: ubuntu, dockerfile: Dockerfile_Ubuntu, files: ["entrypoint.sh"], args: { VERSION: 22.04 } }
   - { name: centos7, os: centos, dockerfile: Dockerfile_CentOS, files: ["entrypoint.sh"], args: { VERSION: 7 } }
 ```
@@ -94,7 +94,7 @@ containers:
 ```yaml
 [...]
 platforms:
-  - name: fedora36
+  - name: fedora38
   - name: ubuntu2204
   - name: centos7
 [...]

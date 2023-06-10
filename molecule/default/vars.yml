@@ -3,4 +3,5 @@ work_dir: "/tmp/ansible-drpsychick.ansible_testing-default"
 containers:
   - { name: fedora38, os: fedora, dockerfile: Dockerfile_Fedora, files: ["entrypoint.sh"], args: { VERSION: 38 } }
   - { name: ubuntu2204, os: ubuntu, dockerfile: Dockerfile_Ubuntu, files: ["entrypoint.sh"], args: { VERSION: 22.04 } }
+#  - { name: debian11, os: ubuntu, dockerfile: Dockerfile_Debian, files: ["entrypoint.sh"], args: { VERSION: 11 } }
 virtual_machines: []

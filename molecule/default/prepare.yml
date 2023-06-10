@@ -23,7 +23,7 @@
   tasks:
     - name: Required packages
       ansible.builtin.package:
-        name: "{{ ['python3-setuptools', 'python3-pip'] + (['openssh-client'] if ansible_distribution == 'Ubuntu' else ['openssh-clients']) }}"
+        name: "{{ ['python3-setuptools', 'python3-pip'] + (['openssh-client'] if ansible_distribution in ['Ubuntu','Debian'] else ['openssh-clients']) }}"
       become: true
       become_user: root
 
