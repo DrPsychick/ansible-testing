@@ -7,6 +7,6 @@ if [ -n "$ROOT_KEY" ]; then
   echo "$ROOT_KEY" >> /root/.ssh/authorized_keys
 fi
 
-cat </dev/console >/dev/null 2>&1 &
+cat </dev/$(cat /sys/devices/virtual/tty/console/active) >/dev/null 2>&1 &
 
 exec "$@"
