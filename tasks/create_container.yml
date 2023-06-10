@@ -34,7 +34,7 @@
     cgroupns_mode: host
     volumes:
       # read-write required to work in GitHub Actions (+cgroupns=host)
-      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
     tmpfs:
       - /run
       - /run/lock
