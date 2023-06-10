@@ -65,6 +65,23 @@
 #      - SYS_CHROOT
   register: docker_start
 
+- name: Test
+  ansible.builtin.shell: |-
+    docker ps -a
+    docker run --privileged --name {{ container.name }} \
+      --hostname {{ container.name }} \
+      --env ROOT_KEY="{{ ssh_key_pub['content'] | b64decode }}" \
+      --volume /sys/fs/cgroup:/sys/fs/cgroup:ro \
+      --tmpfs /run,/run/lock,/tmp \
+      {{ container.name }}
+  register: test_output
+  changed_when: false
+
+- name: Log test
+  ansible.builtin.debug:
+    msg: "{{ test_output }}"
+  when: test_output is not skipped
+
 - name: Get container info
   community.docker.docker_container_info:
     name: "{{ container.name }}"
@@ -79,7 +96,7 @@
     docker logs {{ container.name }}
   register: docker_log
   when: container_info.container.State.Running == "false" or container_info.container.State.ExitCode != 0
-  changed_when: true
+  changed_when: false
 
 - name: Print logs
   ansible.builtin.debug:
