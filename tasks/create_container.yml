@@ -17,53 +17,53 @@
       path: "{{ work_dir }}"
       args: "{{ container.args }}"
 
-# run named container in background with root-SSH
-- name: Run container {{ container.name }}
-  community.docker.docker_container:
-    name: "{{ container.name }}"
-    hostname: "{{ container.name }}"
-    image: "{{ container.name }}"
-    state: started
-    # required for now to have DBus working
-    privileged: true
-    security_opts:
-      - seccomp=unconfined
-    env:
-      ROOT_KEY: "{{ ssh_key_pub['content'] | b64decode }}"
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    tmpfs:
-# did not work:
-#      {{ ['/run', '/run/lock', '/tmp']
-#      + (['/sys/fs/cgroup/systemd'] if ansible_distribution != 'CentOS' else [])
-#      + (['/var/lib/journal'] if ansible_distribution == 'Ubuntu' else [])
-#      }}
-      - /run
-      - /run/lock
-      - /tmp
-#      - /sys/fs/cgroup/systemd # NOT for centos7
-#      - /var/lib/journal
-# only got DBus to work with 'privileged' :(
-#    capabilities:
-#      - SYS_ADMIN
-#      - SETPCAP
-#      - NET_ADMIN
-#      - NET_RAW
-#      - NET_BIND_SERVICE
-#      - DAC_OVERRIDE
-#      - SYS_PTRACE
-#      - SYSLOG
-#      - AUDIT_CONTROL
-#      - AUDIT_READ
-#      - CHOWN
-#      - DAC_READ_SEARCH
-#      - FOWNER
-#      - SETUID
-#      - SETGID
-#      - SETFCAP
-#      - MAC_OVERRIDE
-#      - SYS_CHROOT
-  register: docker_start
+## run named container in background with root-SSH
+#- name: Run container {{ container.name }}
+#  community.docker.docker_container:
+#    name: "{{ container.name }}"
+#    hostname: "{{ container.name }}"
+#    image: "{{ container.name }}"
+#    state: started
+#    # required for now to have DBus working
+#    privileged: true
+#    security_opts:
+#      - seccomp=unconfined
+#    env:
+#      ROOT_KEY: "{{ ssh_key_pub['content'] | b64decode }}"
+#    volumes:
+#      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+#    tmpfs:
+## did not work:
+##      {{ ['/run', '/run/lock', '/tmp']
+##      + (['/sys/fs/cgroup/systemd'] if ansible_distribution != 'CentOS' else [])
+##      + (['/var/lib/journal'] if ansible_distribution == 'Ubuntu' else [])
+##      }}
+#      - /run
+#      - /run/lock
+#      - /tmp
+##      - /sys/fs/cgroup/systemd # NOT for centos7
+##      - /var/lib/journal
+## only got DBus to work with 'privileged' :(
+##    capabilities:
+##      - SYS_ADMIN
+##      - SETPCAP
+##      - NET_ADMIN
+##      - NET_RAW
+##      - NET_BIND_SERVICE
+##      - DAC_OVERRIDE
+##      - SYS_PTRACE
+##      - SYSLOG
+##      - AUDIT_CONTROL
+##      - AUDIT_READ
+##      - CHOWN
+##      - DAC_READ_SEARCH
+##      - FOWNER
+##      - SETUID
+##      - SETGID
+##      - SETFCAP
+##      - MAC_OVERRIDE
+##      - SYS_CHROOT
+#  register: docker_start
 
 - name: Test
   ansible.builtin.shell: |-
@@ -74,13 +74,13 @@
       --volume /sys/fs/cgroup:/sys/fs/cgroup:ro \
       --tmpfs /run,/run/lock,/tmp \
       {{ container.name }}
-  register: test_output
+  register: docker_start
   changed_when: false
 
 - name: Log test
   ansible.builtin.debug:
-    msg: "{{ test_output }}"
-  when: test_output is not skipped
+    msg: "{{ docker_start }}"
+  when: docker_start is not skipped
 
 - name: Get container info
   community.docker.docker_container_info:
