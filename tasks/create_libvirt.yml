@@ -31,6 +31,8 @@
   ansible.builtin.shell: |
     set -o pipefail
     virsh domifaddr {{ item }} | grep 'ipv4' | awk '{print $4}' | awk -F/ '{print $1}'
+  args:
+    executable: /bin/bash
   register: vm_ips
   become: true
   become_user: root
