@@ -57,8 +57,6 @@
       or autounattend is changed or autorun is changed
     )
   changed_when: true
-  become: true
-  become_user: root
 
 - name: Set instance_uuid variable
   ansible.builtin.set_fact:
@@ -80,8 +78,6 @@
       echo "created"
     fi
   register: create_disk
-  become: true
-  become_user: root
   changed_when: create_disk.stdout == "created"
   when: instance.disk_size is defined and instance.disk_image is not defined
 
@@ -90,8 +86,6 @@
     url: "{{ instance.disk_image_url }}"
     dest: "{{ libvirt_iso_dir }}/{{ instance.disk_image }}"
     mode: "0444"
-  become: true
-  become_user: root
   when: instance.disk_image_url is defined and instance.disk_image is defined
 
 - name: Unarchive disk image
@@ -100,16 +94,12 @@
     dest: "{{ libvirt_image_dir }}/"
     mode: "0644"
     remote_src: true
-  become: true
-  become_user: root
   when: instance.disk_image is defined
 
 - name: Define virtual machine
   community.libvirt.virt:
     command: define
     xml: "{{ lookup('template', 'instance.xml') }}"
-  become: true
-  become_user: root
 
 - name: Create virtual machine
   community.libvirt.virt:
@@ -119,16 +109,12 @@
     state: running
     autostart: true
   register: create_vm
-  become: true
-  become_user: root
 
 - name: Get virtual machine info
   community.libvirt.virt:
     command: info
     name: "{{ instance.name }}"
   register: virt_info_cmd
-  become: true
-  become_user: root
   retries: 10
   delay: 10
   until: not virt_info_cmd.failed and virt_info_cmd[instance.name].state == "running"

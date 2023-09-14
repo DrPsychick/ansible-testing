@@ -3,16 +3,12 @@
   community.libvirt.virt:
     name: "{{ instance.name }}"
     state: destroyed
-  become: true
-  become_user: root
   failed_when: false
 
 - name: Delete virtual machine
   community.libvirt.virt:
     name: "{{ instance.name }}"
     command: undefine
-  become: true
-  become_user: root
   failed_when: false
 
 - name: Check for image
@@ -22,8 +18,6 @@
 
 - name: Delete image (volume)
   ansible.builtin.shell: virsh vol-delete {{ instance.name }}.qcow2 --pool images
-  become: true
-  become_user: root
   when: image_file.stat.exists and instance.disk_image is not defined
   failed_when: false
   tags:
@@ -33,8 +27,6 @@
   ansible.builtin.file:
     path: "{{ libvirt_image_dir }}/{{ instance.name }}.qcow2"
     state: absent
-  become: true
-  become_user: root
   when: image_file.stat.exists and instance.disk_image is defined
   failed_when: false
 
