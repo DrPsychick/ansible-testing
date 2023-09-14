@@ -17,6 +17,7 @@ libvirt_winrm_hotfix_url: "https://raw.githubusercontent.com/jborean93/ansible-w
 # see `virsh pool-dumpxml images`
 libvirt_image_dir: "/var/lib/libvirt/images"
 libvirt_iso_dir: "/var/lib/libvirt/isos"
+libvirt_disk_pool: "default"
 
 libvirt_defaults:
   windows:
