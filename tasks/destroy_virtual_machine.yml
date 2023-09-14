@@ -12,13 +12,15 @@
   failed_when: false
 
 - name: Check for image
-  ansible.builtin.stat:
+  ansible.builtin.file:
     path: "{{ libvirt_image_dir }}/{{ instance.name }}.qcow2"
+    state: file
   register: image_file
+  failed_when: false
 
 - name: Delete image (volume)
   ansible.builtin.shell: virsh vol-delete {{ instance.name }}.qcow2 --pool {{ libvirt_disk_pool }}
-  when: image_file.stat.exists and instance.disk_image is not defined
+  when: image_file.state != "absent" and instance.disk_image is not defined
   failed_when: false
   tags:
     - skip_ansible_lint
@@ -27,7 +29,7 @@
   ansible.builtin.file:
     path: "{{ libvirt_image_dir }}/{{ instance.name }}.qcow2"
     state: absent
-  when: image_file.stat.exists and instance.disk_image is defined
+  when: image_file.state != "absent" and instance.disk_image is defined
   failed_when: false
 
 - name: Delete directory
