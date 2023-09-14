@@ -28,7 +28,7 @@
     </hyperv>
   </features>
   <cpu>
-    <topology sockets='1' dies='2' cores='4' threads='1'/>
+    <topology sockets='1' cores='2' threads='2'/>
   </cpu>
   <clock offset='localtime'>
     <timer name='rtc' tickpolicy='catchup'/>
