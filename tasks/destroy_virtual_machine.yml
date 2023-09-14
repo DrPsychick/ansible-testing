@@ -17,7 +17,7 @@
   register: image_file
 
 - name: Delete image (volume)
-  ansible.builtin.shell: virsh vol-delete {{ instance.name }}.qcow2 --pool images
+  ansible.builtin.shell: virsh vol-delete {{ instance.name }}.qcow2 --pool {{ libvirt_disk_pool }}
   when: image_file.stat.exists and instance.disk_image is not defined
   failed_when: false
   tags:
