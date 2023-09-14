@@ -73,7 +73,7 @@
 - name: Create disk
   ansible.builtin.shell: >
     if [ ! -r "{{ libvirt_image_dir }}/{{ instance.name }}.qcow2" ]; then
-      virsh vol-create-as images {{ instance.name }}.qcow2 {{ instance.disk_size }} --format qcow2 > /dev/null;
+      virsh vol-create-as {{ libvirt_disk_pool }} {{ instance.name }}.qcow2 {{ instance.disk_size }} --format qcow2 > /dev/null;
       chown libvirt-qemu:kvm {{ libvirt_image_dir }}/{{ instance.name }}.qcow2;
       echo "created"
     fi
