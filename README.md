@@ -1,5 +1,6 @@
 # Ansible testing
-[![Build Status](https://travis-ci.com/DrPsychick/ansible-testing.svg?branch=master)](https://app.travis-ci.com/github/DrPsychick/ansible-testing)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/DrPsychick/ansible-testing/ci.yml
+)](https://github.com/DrPsychick/ansible-testing/actions/workflows/ci.yml)
 [![license](https://img.shields.io/github/license/drpsychick/ansible-testing.svg)](https://github.com/drpsychick/ansible-testing/blob/master/LICENSE)
 [![Paypal](https://img.shields.io/badge/donate-paypal-00457c.svg?logo=paypal)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FTXDN7LCDWUEA&source=url)
 [![GitHub Sponsor](https://img.shields.io/badge/github-sponsor-blue?logo=github)](https://github.com/sponsors/DrPsychick)
@@ -148,6 +149,25 @@ Requirements
 sudo curl -Lo /var/lib/libvirt/isos/WindowsServer2016.iso http://care.dlservice.microsoft.com/dl/download/1/6/F/16FA20E6-4662-482A-920B-1A45CF5AAE3C/14393.0.160715-1616.RS1_RELEASE_SERVER_EVAL_X64FRE_EN-US.ISO
 sudo curl -Lo /var/lib/libvirt/isos/virtio-win.iso https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso
 ```
+
+## Use libvirt as user (no become/sudo)
+Create `image` and `iso` pool that is writeable by the user and set the permissions of the pool accordingly.
+Make sure the user is part of 
+```shell
+sudo virsh pool-create-as myisos dir --target /mydir/libvirt/isos
+sudo virsh pool-edit isos # set permissions
+
+sudo virsh pool-create-as myimages dir --target /mydir/libvirt/images
+sudo virsh pool-edit images2 # set permissions
+```
+
+Reference the directories and pool in your `molecule/libvirt/vars.yml`
+```shell
+libvirt_image_dir: "/mydir/libvirt/images"
+libvirt_iso_dir: "/mydir/libvirt/isos"
+libvirt_disk_pool: "myimages"
+```
+
 
 ## With Ansible `molecule`
 Create a new role with `molecule init role <name>` or initialize the Molecule scenario in an existing role directory with

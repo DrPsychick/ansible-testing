@@ -4,7 +4,7 @@ dependency:
   options:
     requirements-file: requirements.yml
 driver:
-  name: delegated
+  name: default
 platforms:
   - name: windows2016
 provisioner:
