@@ -14,11 +14,10 @@
   </resource>
   <os>
     <type arch='x86_64' machine='pc-q35-4.2'>hvm</type>
-{% if instance.disk_image is defined %}
-    <boot dev="hd"/>
-{% else %}
+{% if instance.disk_image is not defined %}
     <boot dev="cdrom"/>
 {% endif %}
+    <boot dev="hd"/>
   </os>
   <features>
     <acpi/>
@@ -28,29 +27,7 @@
       <spinlocks state='on' retries='8191'/>
     </hyperv>
   </features>
-  <cpu mode='custom' match='exact' check='full'>
-    <model fallback='forbid'>IvyBridge-IBRS</model>
-    <vendor>Intel</vendor>
-    <feature policy='require' name='ss'/>
-    <feature policy='require' name='vmx'/>
-    <feature policy='require' name='pdcm'/>
-    <feature policy='require' name='pcid'/>
-    <feature policy='require' name='hypervisor'/>
-    <feature policy='require' name='arat'/>
-    <feature policy='require' name='tsc_adjust'/>
-    <feature policy='require' name='umip'/>
-    <feature policy='require' name='md-clear'/>
-    <feature policy='require' name='stibp'/>
-    <feature policy='require' name='arch-capabilities'/>
-    <feature policy='require' name='ssbd'/>
-    <feature policy='require' name='xsaveopt'/>
-    <feature policy='require' name='ibpb'/>
-    <feature policy='require' name='ibrs'/>
-    <feature policy='require' name='amd-stibp'/>
-    <feature policy='require' name='amd-ssbd'/>
-    <feature policy='require' name='skip-l1dfl-vmentry'/>
-    <feature policy='require' name='pschange-mc-no'/>
-  </cpu>
+  <cpu mode='host-passthrough' check='none' />
   <clock offset='localtime'>
     <timer name='rtc' tickpolicy='catchup'/>
     <timer name='pit' tickpolicy='delay'/>

@@ -34,8 +34,6 @@
   args:
     executable: /bin/bash
   register: vm_ips
-  become: true
-  become_user: root
   with_items: "{{ virtual_machine_inventory }}"
   changed_when: false
   failed_when: not vm_ips.stdout | regex_search('[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+')
