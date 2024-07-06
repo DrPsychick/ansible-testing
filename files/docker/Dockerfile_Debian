@@ -1,5 +1,5 @@
 ARG VERSION=11
-FROM debian:$VERSION-slim
+FROM debian:$VERSION
 
 ENV container=docker
 
