@@ -7,6 +7,9 @@ on:
   pull_request:
     branches:
       - master
+  schedule:
+    # monthly on 30th, 03:15
+    - cron: "15 3 30 * *"
 
 jobs:
   molecule:

@@ -17,4 +17,7 @@ galaxy_info:
     - libvirt
     - molecule
 
-dependencies: []
+dependencies:
+  - community.docker
+  - community.general
+  - community.libvirt
