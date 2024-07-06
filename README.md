@@ -30,9 +30,10 @@ If you have other systems you want to test, feel free to provide a PR with addit
 
 Contributing is really easy:
 1. Fork the project on GitHub : https://github.com/DrPsychick/ansible-testing
-2. Checkout the fork on your Linux box
-3. Symlink the fork in your roles Molecule scenario (i.e. `./molecule/default/`)
-4. Make changes and test your role with them until you're happy - commit and create a pull-request
+1. Checkout the fork on your Linux box
+1. Symlink the fork in your roles Molecule scenario (i.e. `./molecule/default/`)
+1. Make changes and test your role with them until you're happy - commit and create a pull-request
+1. You can run GitHub Actions locally for fast feedback with `act`: https://nektosact.com/installation/index.html
 
 ```shell
 GitHubName=YourName
