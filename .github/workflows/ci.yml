@@ -24,7 +24,7 @@ jobs:
       - name: Test
         uses: gofrolist/molecule-action@v2
         with:
-          molecule_options: --debug -v
+          # molecule_options: --debug -v
           molecule_working_dir: "${{ github.repository }}"
           molecule_command: test
         env:
