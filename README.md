@@ -216,7 +216,9 @@ A full spin-up (create) run for 2 Windows instances with predefined images took 
 Requires `python3-venv`
 
 ```shell
-ANSIBLE_VERSION=latest
+# version 16 and latest fail with
+# ERROR! Unexpected Exception, this is probably a bug: cannot import name 'should_retry_error' from 'ansible.galaxy.api'
+ANSIBLE_VERSION=15
 python3 -m venv .venv
 . .venv/bin/activate
 pip3 install --upgrade pip setuptools wheel
