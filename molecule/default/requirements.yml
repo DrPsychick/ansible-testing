@@ -1,4 +1,2 @@
 roles:
-  - name: drpsychick.ansible_testing
-    version: master
   - name: geerlingguy.docker
