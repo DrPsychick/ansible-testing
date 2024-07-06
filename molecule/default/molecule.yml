@@ -8,8 +8,8 @@ driver:
 lint: |
   ansible-lint
 platforms:
-  - name: ubuntu2204
-  - name: fedora38
+  - name: ubuntu2404
+  - name: fedora40
 #  - name: debian11
 provisioner:
   name: ansible

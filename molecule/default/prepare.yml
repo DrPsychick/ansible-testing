@@ -23,9 +23,4 @@
   tasks:
     - name: Required packages
       ansible.builtin.package:
-        name: "{{ ['python3-setuptools', 'python3-pip'] + (['openssh-client'] if ansible_distribution in ['Ubuntu','Debian'] else ['openssh-clients']) }}"
-
-    - name: Required pip packages
-      ansible.builtin.pip:
-        name: ["docker"]
-        state: latest
+        name: "{{ ['python3-setuptools', 'python3-pip', 'python3-docker'] + (['openssh-client'] if ansible_distribution in ['Ubuntu','Debian'] else ['openssh-clients']) }}"

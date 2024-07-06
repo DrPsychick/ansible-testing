@@ -1,4 +1,4 @@
-ARG VERSION=22.04
+ARG VERSION=24.04
 FROM ubuntu:$VERSION
 
 ENV container=docker

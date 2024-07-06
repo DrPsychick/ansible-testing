@@ -30,9 +30,10 @@ If you have other systems you want to test, feel free to provide a PR with addit
 
 Contributing is really easy:
 1. Fork the project on GitHub : https://github.com/DrPsychick/ansible-testing
-2. Checkout the fork on your Linux box
-3. Symlink the fork in your roles Molecule scenario (i.e. `./molecule/default/`)
-4. Make changes and test your role with them until you're happy - commit and create a pull-request
+1. Checkout the fork on your Linux box
+1. Symlink the fork in your roles Molecule scenario (i.e. `./molecule/default/`)
+1. Make changes and test your role with them until you're happy - commit and create a pull-request
+1. You can run GitHub Actions locally for fast feedback with `act`: https://nektosact.com/installation/index.html
 
 ```shell
 GitHubName=YourName
@@ -86,8 +87,8 @@ Then adjust the `platforms` in `molecule/default/molecule.yml` accordingly.
 ```yaml
 work_dir: "/tmp/ansible-testrole-default"
 containers:
-  - { name: fedora38, os: fedora, dockerfile: Dockerfile_Fedora, files: ["entrypoint.sh"], args: { VERSION: 38 } }
-  - { name: ubuntu2204, os: ubuntu, dockerfile: Dockerfile_Ubuntu, files: ["entrypoint.sh"], args: { VERSION: 22.04 } }
+  - { name: fedora40, os: fedora, dockerfile: Dockerfile_Fedora, files: ["entrypoint.sh"], args: { VERSION: 40 } }
+  - { name: ubuntu2404, os: ubuntu, dockerfile: Dockerfile_Ubuntu, files: ["entrypoint.sh"], args: { VERSION: 24.04 } }
   - { name: centos7, os: centos, dockerfile: Dockerfile_CentOS, files: ["entrypoint.sh"], args: { VERSION: 7 } }
 ```
 
@@ -95,8 +96,8 @@ containers:
 ```yaml
 [...]
 platforms:
-  - name: fedora38
-  - name: ubuntu2204
+  - name: fedora40
+  - name: ubuntu2404
   - name: centos7
 [...]
 ```
@@ -209,3 +210,19 @@ A full spin-up (create) run for 2 Windows instances with predefined images took 
 2. Create a zip from the ready to use VM: `zip windows2016-clean.qcow2.zip windows2016.qcow2`
    (the filename must match and be in the root of the zip file - with no path)
 3. Move the zip file to `libvirt_iso_dir` or provide it via URL (`disk_image_url`)
+
+# Test locally with different Ansible versions
+
+Requires `python3-venv`
+
+```shell
+# version 16 and latest fail with
+# ERROR! Unexpected Exception, this is probably a bug: cannot import name 'should_retry_error' from 'ansible.galaxy.api'
+ANSIBLE_VERSION=15
+python3 -m venv .venv
+. .venv/bin/activate
+pip3 install --upgrade pip setuptools wheel
+pip3 install --requirement requirements-ansible_${ANSIBLE_VERSION}.txt
+
+molecule test
+```

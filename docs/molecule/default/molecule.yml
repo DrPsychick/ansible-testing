@@ -6,8 +6,8 @@ dependency:
 driver:
   name: docker
 platforms:
-  - name: fedora38
-  - name: ubuntu2204
+  - name: fedora40
+  - name: ubuntu2404
   - name: centos8
 provisioner:
   name: ansible

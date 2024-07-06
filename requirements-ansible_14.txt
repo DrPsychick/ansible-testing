@@ -1,0 +1,9 @@
+# includes ansible-core 2.14.x
+ansible<8.0.0
+ansible-base
+ansible-lint
+ansible-lint-junit
+ansible-compat
+pywinrm
+molecule
+molecule-docker
