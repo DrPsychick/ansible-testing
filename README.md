@@ -210,3 +210,17 @@ A full spin-up (create) run for 2 Windows instances with predefined images took 
 2. Create a zip from the ready to use VM: `zip windows2016-clean.qcow2.zip windows2016.qcow2`
    (the filename must match and be in the root of the zip file - with no path)
 3. Move the zip file to `libvirt_iso_dir` or provide it via URL (`disk_image_url`)
+
+# Test locally with different Ansible versions
+
+Requires `python3-venv`
+
+```shell
+ANSIBLE_VERSION=latest
+python3 -m venv .venv
+. .venv/bin/activate
+pip3 install --upgrade pip setuptools wheel
+pip3 install --requirement requirements-ansible_${ANSIBLE_VERSION}.txt
+
+molecule test
+```
