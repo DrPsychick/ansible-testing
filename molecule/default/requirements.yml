@@ -1,2 +1,6 @@
 roles:
   - name: geerlingguy.docker
+collections:
+  - community.docker
+  - community.general
+  - community.libvirt
