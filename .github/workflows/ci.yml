@@ -3,10 +3,10 @@ name: Molecule
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
   schedule:
     # monthly on 30th, 03:15
     - cron: "15 3 30 * *"

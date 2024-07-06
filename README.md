@@ -1,7 +1,7 @@
 # Ansible testing
 [![Build Status](https://img.shields.io/github/actions/workflow/status/DrPsychick/ansible-testing/ci.yml
 )](https://github.com/DrPsychick/ansible-testing/actions/workflows/ci.yml)
-[![license](https://img.shields.io/github/license/drpsychick/ansible-testing.svg)](https://github.com/drpsychick/ansible-testing/blob/master/LICENSE)
+[![license](https://img.shields.io/github/license/drpsychick/ansible-testing.svg)](https://github.com/drpsychick/ansible-testing/blob/main/LICENSE)
 [![Paypal](https://img.shields.io/badge/donate-paypal-00457c.svg?logo=paypal)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FTXDN7LCDWUEA&source=url)
 [![GitHub Sponsor](https://img.shields.io/badge/github-sponsor-blue?logo=github)](https://github.com/sponsors/DrPsychick)
 
@@ -75,7 +75,7 @@ Create a new role with `molecule init role <name>` or initialize the Molecule sc
 Download the example files from this repo which make use of this role (in `create` and `destroy`):
 ```shell
 for f in create destroy molecule requirements vars; do
-  curl -o molecule/default/$f.yml https://raw.githubusercontent.com/DrPsychick/ansible-testing/master/docs/molecule/default/$f.yml
+  curl -o molecule/default/$f.yml https://raw.githubusercontent.com/DrPsychick/ansible-testing/main/docs/molecule/default/$f.yml
 done
 ```
 
@@ -176,7 +176,7 @@ Create a new role with `molecule init role <name>` or initialize the Molecule sc
 Download the example files from this repo which make use of this role (in `create` and `destroy`):
 ```shell
 for f in create destroy molecule requirements vars; do
-  curl -o molecule/libvirt/$f.yml https://raw.githubusercontent.com/DrPsychick/ansible-testing/master/docs/molecule/libvirt/$f.yml
+  curl -o molecule/libvirt/$f.yml https://raw.githubusercontent.com/DrPsychick/ansible-testing/main/docs/molecule/libvirt/$f.yml
 done
 ```
 
