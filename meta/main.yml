@@ -17,7 +17,7 @@ galaxy_info:
     - libvirt
     - molecule
 
-  dependencies:
-    "community.docker": ">=3.10.0"
-    "community.general": ">=9.0.0"
-    "community.libvirt": ">=1.3.0"
+  # dependencies:
+  #   "community.docker": ">=3.10.0"
+  #   "community.general": ">=9.0.0"
+  #   "community.libvirt": ">=1.3.0"
