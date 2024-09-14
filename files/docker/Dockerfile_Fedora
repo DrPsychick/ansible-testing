@@ -1,4 +1,4 @@
-ARG VERSION=41
+ARG VERSION=42
 FROM fedora:$VERSION
 
 ENV container=docker
