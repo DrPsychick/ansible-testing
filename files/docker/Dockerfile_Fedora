@@ -5,7 +5,7 @@ ENV container=docker
 
 STOPSIGNAL SIGRTMIN+3
 
-RUN dnf -y install systemd openssh-server sudo \
+RUN dnf -y install python3 systemd openssh-server sudo \
   && dnf clean all 
 #  && (cd /lib/systemd/system/sysinit.target.wants/ ; for i in * ; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i ; done) ; \
 #  rm -f /lib/systemd/system/multi-user.target.wants/* ;\
