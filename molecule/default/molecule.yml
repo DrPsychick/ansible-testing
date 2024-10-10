@@ -9,7 +9,7 @@ lint: |
   ansible-lint
 platforms:
   - name: ubuntu2404
-  - name: fedora40
+  - name: fedora42
 #  - name: debian11
 provisioner:
   name: ansible
