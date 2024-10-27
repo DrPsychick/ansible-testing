@@ -7,8 +7,13 @@
       ansible.builtin.shell: |
         ansible --version
         apt-get update && apt-get upgrade -y ansible
+        ansible --version
       delegate_to: localhost
       run_once: true
+      register: ansible-update
+    - name: Ansible update
+      debug: var=ansible-update
+
 #      when: ansible_distribution == "Fedora"
 #    - name: Fix dnf5 issue
 #      ansible.builtin.shell: |
