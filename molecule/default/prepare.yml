@@ -5,12 +5,13 @@
   tasks:
     - name: Fix dnf5 issue
       ansible.builtin.shell: |
-        dnf install -y ansible fuse-overlayfs
+        dnf install -y fuse-overlayfs
       when: ansible_distribution == "Fedora"
 
     - name: Install fuse-overlayfs
       package:
         name: fuse-overlayfs
+      when: ansible_distribution != "Fedora"
 
 - name: Install prerequisite docker
   hosts: all
