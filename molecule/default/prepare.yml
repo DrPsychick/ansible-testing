@@ -10,9 +10,9 @@
         ansible --version
       delegate_to: localhost
       run_once: true
-      register: ansible-update
+      register: ansible_update
     - name: Ansible update
-      debug: var=ansible-update
+      debug: var=ansible_update
 
 #      when: ansible_distribution == "Fedora"
 #    - name: Fix dnf5 issue
