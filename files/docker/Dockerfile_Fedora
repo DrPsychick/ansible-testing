@@ -6,7 +6,7 @@ ENV container=docker
 STOPSIGNAL SIGRTMIN+3
 
 RUN dnf -y update \
-  && dnf -y install python3 python3-libdnf5 systemd openssh-server sudo \
+  && dnf -y install python3 python3-libdnf5 systemd openssh-server sudo gnupg2 \
   && dnf clean all
 #  && (cd /lib/systemd/system/sysinit.target.wants/ ; for i in * ; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i ; done) ; \
 #  rm -f /lib/systemd/system/multi-user.target.wants/* ;\

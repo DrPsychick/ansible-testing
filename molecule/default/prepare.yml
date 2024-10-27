@@ -5,16 +5,17 @@
   tasks:
     - name: Update ansible
       ansible.builtin.shell: |
-        ansible --version
-        apt-get update && apt-get upgrade -y ansible python3-pip
+#        ansible --version
+#        apt-get update && apt-get upgrade -y ansible python3-pip
         ansible --version
         pip3 install -U ansible
         ansible --version
       delegate_to: localhost
       run_once: true
-      register: ansible_update
-    - name: Ansible update
-      debug: var=ansible_update
+      when: ansible_distribution == "Fedora"
+#      register: ansible_update
+#    - name: Ansible update
+#      debug: var=ansible_update
 
 #      when: ansible_distribution == "Fedora"
 #    - name: Fix dnf5 issue
