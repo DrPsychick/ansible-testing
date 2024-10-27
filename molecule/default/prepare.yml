@@ -3,31 +3,16 @@
 - name: Install docker driver
   hosts: all
   tasks:
-    - name: Update ansible
+    - name: Update ansible (fix for Fedora)
       ansible.builtin.shell: |
-        ansible --version
         pip3 install -U ansible
-        ansible --version
       delegate_to: localhost
       run_once: true
       when: ansible_distribution == "Fedora"
-#        ansible --version
-#        apt-get update && apt-get upgrade -y ansible python3-pip
-#      register: ansible_update
-#    - name: Ansible update
-#      debug: var=ansible_update
-
-#      when: ansible_distribution == "Fedora"
-#    - name: Fix dnf5 issue
-#      ansible.builtin.shell: |
-#        dnf install -y fuse-overlayfs
-#      delegate_to: localhost
-#      when: ansible_distribution == "Fedora"
 
     - name: Install fuse-overlayfs
       package:
         name: fuse-overlayfs
-#      when: ansible_distribution != "Fedora"
 
 - name: Install prerequisite docker
   hosts: all
