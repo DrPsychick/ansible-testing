@@ -5,9 +5,11 @@ ENV container=docker
 
 STOPSIGNAL SIGRTMIN+3
 
-RUN apt update \
-    && apt install -y systemd dbus openssh-server rsyslog ca-certificates sudo python3 \
-    && apt clean
+RUN <<EOF
+    apt update
+    apt install -y systemd dbus openssh-server rsyslog ca-certificates sudo python3
+    apt clean
+EOF
 
 #RUN sed -i 's/^\(module(load="imklog")\)/#\1/' /etc/rsyslog.conf
 
