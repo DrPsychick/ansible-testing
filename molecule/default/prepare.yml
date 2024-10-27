@@ -4,8 +4,8 @@
   hosts: all
   tasks:
     - name: Fix dnf5 issue
-      package:
-        name: ansible
+      ansible.builtin.shell: |
+        dnf install -y ansible fuse-overlayfs
       when: ansible_distribution == "Fedora"
 
     - name: Install fuse-overlayfs
