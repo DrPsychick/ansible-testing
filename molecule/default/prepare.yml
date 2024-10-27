@@ -6,6 +6,7 @@
     - name: Update ansible
       ansible.builtin.shell: |
         ansible --version
+        sleep 10
         apt-get update && apt-get upgrade -y ansible
       delegate_to: localhost
 #      when: ansible_distribution == "Fedora"
