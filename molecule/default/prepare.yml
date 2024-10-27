@@ -1,7 +1,13 @@
 ---
+
 - name: Install docker driver
   hosts: all
   tasks:
+    - name: Fix dnf5 issue
+      package:
+        name: ansible
+      when: ansible_distribution == "Fedora"
+
     - name: Install fuse-overlayfs
       package:
         name: fuse-overlayfs
