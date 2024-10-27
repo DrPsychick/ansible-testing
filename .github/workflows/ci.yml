@@ -21,6 +21,8 @@ jobs:
           path: "${{ github.repository }}"
       - name: Check docker config
         run: cat /etc/docker/daemon.json || echo; docker system info; docker version
+      - name: Check ansible
+        run: ansible --version
       - name: Test
         uses: gofrolist/molecule-action@v2
         with:
