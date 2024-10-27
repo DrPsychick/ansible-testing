@@ -6,7 +6,7 @@
     - name: Update ansible
       ansible.builtin.shell: |
         ansible --version
-        apt-get update ansible
+        apt-get upgrade ansible
       delegate_to: localhost
 #      when: ansible_distribution == "Fedora"
 #    - name: Fix dnf5 issue
