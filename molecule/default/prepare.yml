@@ -8,7 +8,7 @@
         ansible --version
         apt-get update && apt-get upgrade -y ansible python3-pip
         ansible --version
-        pip3 install -y ansible
+        pip3 install -U ansible
         ansible --version
       delegate_to: localhost
       run_once: true
