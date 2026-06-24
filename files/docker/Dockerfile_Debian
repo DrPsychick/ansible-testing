@@ -1,4 +1,4 @@
-ARG VERSION=12
+ARG VERSION=bookworm-20260623
 FROM debian:$VERSION
 
 ENV container=docker
